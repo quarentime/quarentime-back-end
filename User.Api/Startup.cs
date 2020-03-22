@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System;
 
 namespace User.Api
 {
@@ -26,10 +28,17 @@ namespace User.Api
                         options.SerializerSettings.ContractResolver = new DefaultContractResolver
                         {
                             NamingStrategy = new SnakeCaseNamingStrategy(),
-                        }; 
-                        options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter(new SnakeCaseNamingStrategy())); 
-                        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore; 
+                        };
+                        options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter(new SnakeCaseNamingStrategy()));
+                        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                         options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+                        options.Authority = Environment.GetEnvironmentVariable("JWT_AUTHORITY");
                     });
         }
 
@@ -46,6 +55,8 @@ namespace User.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
