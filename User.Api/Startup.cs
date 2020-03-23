@@ -7,6 +7,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System;
+using User.Api.Filters;
+using User.Api.Services;
 
 namespace User.Api
 {
@@ -22,7 +24,10 @@ namespace User.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
+            services.AddControllers(options =>
+                    {
+                        options.Filters.Add(typeof(ExceptionFilter));
+                    })
                     .AddNewtonsoftJson(options =>
                     {
                         options.SerializerSettings.ContractResolver = new DefaultContractResolver
@@ -32,6 +37,10 @@ namespace User.Api
                         options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter(new SnakeCaseNamingStrategy()));
                         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                         options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    })
+                    .ConfigureApiBehaviorOptions(options =>
+                    {
+                        options.SuppressModelStateInvalidFilter = true;
                     });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -40,6 +49,10 @@ namespace User.Api
                         options.Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
                         options.Authority = Environment.GetEnvironmentVariable("JWT_AUTHORITY");
                     });
+
+            services
+                .AddScoped(typeof(ICollectionRepository<>), typeof(CollectionRepository<>))
+                .AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

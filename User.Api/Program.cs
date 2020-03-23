@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 
 namespace User.Api
 {
@@ -29,6 +26,11 @@ namespace User.Api
 
                      webBuilder.UseStartup<Startup>();
                      webBuilder.UseUrls("http://+:8080");
-                 });
+                 })
+                 .ConfigureLogging(logging =>
+                 {
+                     logging.ClearProviders();
+                 })
+                 .UseNLog();
     }
 }

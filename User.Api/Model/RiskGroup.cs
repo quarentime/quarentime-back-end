@@ -1,4 +1,4 @@
-namespace RiskProfile.Api.Model
+namespace User.Api.Model
 {
     public enum RiskGroup
     {

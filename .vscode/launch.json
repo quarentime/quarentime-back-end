@@ -22,73 +22,8 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "JWT_AUDIENCE": "quarentime",
-                "JWT_AUTHORITY": "https://securetoken.google.com/quarentime"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
-            "name": "ContactCircle.API",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/ContactCircle.Api/bin/Debug/netcoreapp3.1/ContactCircle.Api.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/ContactCircle.Api",
-            "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
-            "name": "Location.API",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Location.Api/bin/Debug/netcoreapp3.1/Location.Api.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/Location.Api",
-            "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
-            "name": "RiskProfile.Api",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/RiskProfile.Api/bin/Debug/netcoreapp3.1/RiskProfile.Api.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/RiskProfile.Api",
-            "stopAtEntry": false,
-            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "JWT_AUTHORITY": "https://securetoken.google.com/quarentime",
+                "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/account-quarentime.json"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
