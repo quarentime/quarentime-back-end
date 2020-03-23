@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System;
 using User.Api.Filters;
 using User.Api.Services;
+using Microsoft.OpenApi.Models;
 
 namespace User.Api
 {
@@ -50,6 +51,12 @@ namespace User.Api
                         options.Authority = Environment.GetEnvironmentVariable("JWT_AUTHORITY");
                     });
 
+            services.AddSwaggerGen(c =>
+                    {
+                        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Users microservice", Version = "v1" });
+
+                    });
+
             services
                 .AddScoped(typeof(ICollectionRepository<>), typeof(CollectionRepository<>))
                 .AddScoped<IUserService, UserService>();
@@ -74,6 +81,14 @@ namespace User.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Users microservice");
+                c.SupportedSubmitMethods();
             });
         }
     }
