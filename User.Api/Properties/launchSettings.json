@@ -14,7 +14,10 @@
       "launchBrowser": true,
       "launchUrl": "weatherforecast",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "JWT_AUDIENCE": "quarentime",
+        "JWT_AUTHORITY": "https://securetoken.google.com/quarentime",
+        "GOOGLE_APPLICATION_CREDENTIALS": "D:\\Quarentime\\FirebaseAuth\\account-quarentime.json"
       }
     },
     "User.Api": {
