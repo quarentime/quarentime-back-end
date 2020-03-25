@@ -57,6 +57,17 @@ namespace User.Api
 
                     });
 
+            services.AddCors(options => 
+            {
+                options.AddPolicy("AnyOrigin", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+            });
+
             services
                 .AddScoped(typeof(ICollectionRepository<>), typeof(CollectionRepository<>))
                 .AddScoped<IUserService, UserService>();
@@ -69,6 +80,8 @@ namespace User.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("AnyOrigin");
 
             app.UseHttpsRedirection();
 
