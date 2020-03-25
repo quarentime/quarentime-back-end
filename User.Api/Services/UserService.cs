@@ -3,7 +3,7 @@ using User.Api.Model;
 
 namespace User.Api.Services
 {
-    public class UserService : IUserService
+    public class UserService : ICollectionRepository
     {
         private readonly ICollectionRepository<PersonalInformation> _personalInformationRepository;
         private readonly ICollectionRepository<SurveyIntake> _surveyRepository;
@@ -23,7 +23,7 @@ namespace User.Api.Services
         public async Task<RiskGroup> UpdateSurveyInfo(string userId, SurveyIntake value)
         {
             await _surveyRepository.UpdateAsync(userId, value);
-            return RiskGroup.LowProbabilitySuspected;
+            return value.Evaluate();
         }
 
         public async Task<PersonalInformation> GetPersonalInformationAsync(string userId)

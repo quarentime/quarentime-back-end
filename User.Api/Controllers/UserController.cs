@@ -9,8 +9,8 @@ namespace User.Api.Controllers
 {
     public class UserController : BaseController
     {
-        private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly ICollectionRepository _userService;
+        public UserController(ICollectionRepository userService)
         {
             _userService = userService;
         }
@@ -46,7 +46,7 @@ namespace User.Api.Controllers
             return new Response<SurveyResponse>(new SurveyResponse
             {
                 Status = answer,
-                ColorHex = "#F7BA61"
+                ColorHex = RiskGroupToHexMapper.HexMapper[answer]
             });
         }
 

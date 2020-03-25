@@ -70,7 +70,7 @@ namespace User.Api
 
             services
                 .AddScoped(typeof(ICollectionRepository<>), typeof(CollectionRepository<>))
-                .AddScoped<IUserService, UserService>();
+                .AddScoped<ICollectionRepository, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
