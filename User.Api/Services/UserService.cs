@@ -20,9 +20,10 @@ namespace User.Api.Services
             await _personalInformationRepository.UpdateAsync(userId, value);
         }
 
-        public async Task UpdateSurveyInfo(string userId, SurveyIntake value)
+        public async Task<RiskGroup> UpdateSurveyInfo(string userId, SurveyIntake value)
         {
             await _surveyRepository.UpdateAsync(userId, value);
+            return RiskGroup.LowProbabilitySuspected;
         }
 
         public async Task<PersonalInformation> GetPersonalInformationAsync(string userId)

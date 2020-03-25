@@ -39,11 +39,15 @@ namespace User.Api.Controllers
 
         [HttpPost]
         [Route("Survey")]
-        public async Task<Response> UpdateSurvey(SurveyIntake value)
+        public async Task<Response<SurveyResponse>> UpdateSurvey(SurveyIntake value)
         {
-            await _userService.UpdateSurveyInfo(UserId.Value, value);
+            var answer = await _userService.UpdateSurveyInfo(UserId.Value, value);
 
-            return new SucessResponse();
+            return new Response<SurveyResponse>(new SurveyResponse
+            {
+                Status = answer,
+                ColorHex = "#F7BA61"
+            });
         }
 
         [HttpGet]
