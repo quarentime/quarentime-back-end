@@ -10,6 +10,7 @@ using System;
 using User.Api.Filters;
 using User.Api.Services;
 using Microsoft.OpenApi.Models;
+using User.Api.Configuration;
 
 namespace User.Api
 {
@@ -70,7 +71,9 @@ namespace User.Api
 
             services
                 .AddScoped(typeof(ICollectionRepository<>), typeof(CollectionRepository<>))
-                .AddScoped<IUserService, UserService>();
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<IPhoneVerificationService, PhoneVerificationService>()
+                .AddScoped<IConfigurationService, ConfigurationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

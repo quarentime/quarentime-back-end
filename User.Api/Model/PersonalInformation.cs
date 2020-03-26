@@ -10,5 +10,6 @@ namespace User.Api.Model
         [FirestoreProperty] public string Surname { get; set; }
         [FirestoreProperty] public int Age { get; set; }
         [FirestoreProperty] public string PhoneNumber { get; set; }
+        [FirestoreProperty] public bool Verified { get; set; }
     }
 }
