@@ -3,7 +3,7 @@ using User.Api.Model;
 
 namespace User.Api.Services
 {
-    public interface ICollectionRepository
+    public interface IUserService
     {
         Task UpdatePersonalInformationAsync(string userId, PersonalInformation value);
         Task<RiskGroup> UpdateSurveyInfo(string userId, SurveyIntake value);

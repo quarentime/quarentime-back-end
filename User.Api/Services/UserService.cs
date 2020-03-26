@@ -3,7 +3,7 @@ using User.Api.Model;
 
 namespace User.Api.Services
 {
-    public class UserService : ICollectionRepository
+    public class UserService : IUserService
     {
         private readonly ICollectionRepository<PersonalInformation> _personalInformationRepository;
         private readonly ICollectionRepository<SurveyIntake> _surveyRepository;

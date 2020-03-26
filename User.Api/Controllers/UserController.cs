@@ -9,8 +9,8 @@ namespace User.Api.Controllers
 {
     public class UserController : BaseController
     {
-        private readonly ICollectionRepository _userService;
-        public UserController(ICollectionRepository userService)
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }
