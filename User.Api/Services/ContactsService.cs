@@ -57,7 +57,20 @@ namespace User.Api.Services
 
         public async Task<IEnumerable<Contact>> GetAllContactsAsync(string userId)
         {
-            return await _contactRepository.GetAllAsync(rootId: userId);
+            // My contacts
+            var contacts =  (await _contactRepository.GetAllAsync(rootId: userId)).ToList();
+
+            // Invites that I sent
+            var invites = await _inviteRepository.GetByFieldAsync(nameof(Invite.FromUserId), userId);
+
+            contacts.AddRange(invites.Select(i => new Contact
+            {
+                Name = i.Name, 
+                PhoneNumber = i.PhoneNumber, 
+                Pending = i.Pending
+            }));
+
+            return contacts;
         }
 
         public async Task AcceptInviteAsync(string userId, string inviteId)
