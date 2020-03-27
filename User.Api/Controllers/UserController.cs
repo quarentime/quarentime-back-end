@@ -63,5 +63,20 @@ namespace User.Api.Controllers
             return new Response<SurveyIntake>(result);
         }
 
+        [HttpPost]
+        [Route("VerifyPhone")]
+        public async Task<Response> VerifyPhoneNumber()
+        {
+            await _userService.RequestPhoneValidation(UserId.Value);
+            return new SucessResponse();
+        }
+
+        [HttpPost]
+        [Route("ConfirmVerificationCode")]
+        public async Task<Response<bool>> ConfirmPhoneNumber(PhoneVerificationContract phoneVerificationContract)
+        {
+            var result = await _userService.CheckVerificationCode(UserId.Value,phoneVerificationContract.Code);
+            return new Response<bool>(result);
+        }
     }
 }
