@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using User.Api.Model;
+using System.Linq;
 
 namespace User.Api.Services
 {
@@ -56,6 +57,13 @@ namespace User.Api.Services
                 return true;
             }
             return false;
+        }
+        
+        public async Task<PersonalInformation> GetUserByPhone(string phoneNumber)
+        {
+            return (await _personalInformationRepository
+                            .GetByFieldAsync(nameof(PersonalInformation.PhoneNumber), phoneNumber))
+                            .FirstOrDefault();
         }
     }
 }

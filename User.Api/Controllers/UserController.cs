@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using User.Api.Contracts;
 using User.Api.Exceptions;
@@ -10,9 +11,12 @@ namespace User.Api.Controllers
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IContactsService _contactsService;
+
+        public UserController(IUserService userService, IContactsService contactsService)
         {
             _userService = userService;
+            _contactsService = contactsService;
         }
 
         [HttpGet]
@@ -77,6 +81,38 @@ namespace User.Api.Controllers
         {
             var result = await _userService.CheckVerificationCode(UserId.Value,phoneVerificationContract.Code);
             return new Response<bool>(result);
+        }
+
+        [HttpPost]
+        [Route("Contacts")]
+        public async Task<Response> AddContacts(ContactCollectionRequestContract contactCollection)
+        {
+            await _contactsService.InsertManyAsync(UserId.Value, contactCollection.Contacts);
+            return new SucessResponse();
+        }
+
+        [HttpGet]
+        [Route("Contacts")]
+        public async Task<Response<IEnumerable<Contact>>> GetContacts()
+        {
+            var result = await _contactsService.GetAllContactsAsync(UserId.Value);
+            return new Response<IEnumerable<Contact>>(result);
+        }
+
+        [HttpPost]
+        [Route("Invites/Accept")]
+        public async Task<Response> AcceptInvite(AcceptInviteRequestContract invite)
+        {
+            await _contactsService.AcceptInviteAsync(UserId.Value, invite.InviteId);
+            return new SucessResponse();
+        }
+
+        [HttpGet]
+        [Route("Invites/Pending")]
+        public async Task<Response<IEnumerable<Invite>>> GetPendingInvites()
+        {
+            var result = await _contactsService.GetPendingInvitesAsync(UserId.Value);
+            return new Response<IEnumerable<Invite>>(result);
         }
     }
 }

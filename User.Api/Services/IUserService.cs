@@ -11,5 +11,6 @@ namespace User.Api.Services
         Task<SurveyIntake> GetSurveyInfoAsync(string userId);
         Task RequestPhoneValidation(string userId);
         Task<bool> CheckVerificationCode(string userId, string verificationCode);
+        Task<PersonalInformation> GetUserByPhone(string phoneNumber);
     }
 }
