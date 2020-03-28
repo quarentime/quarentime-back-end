@@ -10,5 +10,6 @@ namespace User.Api.Services
         Task<IEnumerable<Invite>> GetPendingInvitesAsync(string userId);
         Task<IEnumerable<Contact>> GetAllContactsAsync(string userId);
         Task AcceptInviteAsync(string userId, string inviteId);
+        Task RejectInvite(string inviteId);
     }
 }

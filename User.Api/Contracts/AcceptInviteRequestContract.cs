@@ -1,7 +1,6 @@
 namespace User.Api.Contracts
 {
-    public class AcceptInviteRequestContract
+    public class AcceptInviteRequestContract : InviteRequestContract
     {
-        public string InviteId { get; set; }
     }
 }

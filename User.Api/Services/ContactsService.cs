@@ -93,5 +93,10 @@ namespace User.Api.Services
             invite.Pending = false;
             await _inviteRepository.DeleteAsync(inviteId);
         }
+
+        public async Task RejectInvite(string inviteId)
+        {
+            await _inviteRepository.DeleteAsync(inviteId);
+        }
     }
 }

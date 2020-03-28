@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using User.Api.Contracts;
@@ -104,6 +105,14 @@ namespace User.Api.Controllers
         public async Task<Response> AcceptInvite(AcceptInviteRequestContract invite)
         {
             await _contactsService.AcceptInviteAsync(UserId.Value, invite.InviteId);
+            return new SucessResponse();
+        }
+
+        [HttpDelete]
+        [Route("Invites/Reject}")]
+        public async Task<Response> RejectInvite(RejectInviteRequestContract invite)
+        {
+            await _contactsService.RejectInvite(invite.InviteId);
             return new SucessResponse();
         }
 
