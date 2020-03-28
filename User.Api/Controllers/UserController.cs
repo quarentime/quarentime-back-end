@@ -109,7 +109,7 @@ namespace User.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("Invites/Reject}")]
+        [Route("FriendRequests/Reject}")]
         public async Task<Response> RejectInvite(RejectInviteRequestContract invite)
         {
             await _contactsService.RejectInvite(invite.InviteId);
