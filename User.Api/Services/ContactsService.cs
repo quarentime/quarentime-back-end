@@ -24,6 +24,8 @@ namespace User.Api.Services
 
         public async Task InsertManyAsync(string userId, IEnumerable<Contact> contacts)
         {
+            var currentUser = await _userService.GetPersonalInformationAsync(userId);
+
             foreach (var contact in contacts)
             {
                 var alreadyExists = (await _contactRepository
@@ -37,6 +39,8 @@ namespace User.Api.Services
                 await _inviteRepository.InsertAsync($"{userId}{contact.PhoneNumber}", new Invite
                 {
                     FromUserId = userId,
+                    FromUserName = currentUser.Name,
+                    FromUserPhoneNumber = currentUser.PhoneNumber,
                     PhoneNumber = contact.PhoneNumber,
                     Name = contact.Name,
                     Pending = true
@@ -81,13 +85,24 @@ namespace User.Api.Services
                 throw new NotFoundException();
             }
 
+            // Adding contact to current user
             await _contactRepository.InsertAsync(rootId: userId, documentId: invite.FromUserId, value: new Contact
+            {
+                Name = invite.FromUserName, 
+                PhoneNumber = invite.FromUserPhoneNumber, 
+                UserId = invite.FromUserId, 
+                DateAdded = DateTime.UtcNow,
+                Status = await _userService.GetRiskGroupAsync(invite.FromUserId)
+            });
+
+            // Adding contact to the other user
+             await _contactRepository.InsertAsync(rootId: invite.FromUserId, documentId: userId, value: new Contact
             {
                 Name = invite.Name, 
                 PhoneNumber = invite.PhoneNumber, 
-                UserId = invite.FromUserId, 
+                UserId = userId, 
                 DateAdded = DateTime.UtcNow,
-                Status = RiskGroup.Healthy
+                Status = await _userService.GetRiskGroupAsync(userId)
             });
 
             invite.Pending = false;

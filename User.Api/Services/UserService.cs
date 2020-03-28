@@ -1,19 +1,23 @@
 using System.Threading.Tasks;
 using User.Api.Model;
 using System.Linq;
+using User.Api.Exceptions;
 
 namespace User.Api.Services
 {
     public class UserService : IUserService
     {
+        private readonly ICollectionRepository<User.Api.Model.User> _userRepository;
         private readonly ICollectionRepository<PersonalInformation> _personalInformationRepository;
         private readonly ICollectionRepository<SurveyIntake> _surveyRepository;
         private readonly IPhoneVerificationService _phoneVerificationService;
 
-        public UserService(ICollectionRepository<PersonalInformation> personalInformationRepository,
+        public UserService(ICollectionRepository<User.Api.Model.User> userRepository,
+                           ICollectionRepository<PersonalInformation> personalInformationRepository,
                            ICollectionRepository<SurveyIntake> surveyRepository,
                            IPhoneVerificationService phoneVerificationService)
         {
+            _userRepository = userRepository;
             _personalInformationRepository = personalInformationRepository;
             _surveyRepository = surveyRepository;
             _phoneVerificationService = phoneVerificationService;
@@ -27,7 +31,22 @@ namespace User.Api.Services
         public async Task<RiskGroup> UpdateSurveyInfo(string userId, SurveyIntake value)
         {
             await _surveyRepository.UpdateAsync(userId, value);
-            return value.Evaluate();
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            user.FinalStatus = user.Status = value.Evaluate();
+            await _userRepository.UpdateAsync(userId, user);
+            return user.Status;
+        }
+
+        public async Task<RiskGroup> GetRiskGroupAsync(string userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
+
+            return user.Status;
         }
 
         public async Task<PersonalInformation> GetPersonalInformationAsync(string userId)
@@ -58,7 +77,7 @@ namespace User.Api.Services
             }
             return false;
         }
-        
+
         public async Task<PersonalInformation> GetUserByPhone(string phoneNumber)
         {
             return (await _personalInformationRepository

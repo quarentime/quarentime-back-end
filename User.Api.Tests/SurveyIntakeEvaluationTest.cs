@@ -1,6 +1,4 @@
 using Moq;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using User.Api.Model;
@@ -11,12 +9,14 @@ namespace User.Api.Tests
 {
     public class SurveyIntakeEvaluationTest
     {
+        private static Mock<ICollectionRepository<User.Api.Model.User>> _userRepository;
         private static Mock<ICollectionRepository<SurveyIntake>> _surveyRepository;
         private static Mock<ICollectionRepository<PersonalInformation>> _personalInfoRepository;
         private static Mock<IPhoneVerificationService> _phoneVerificationService;
 
         public SurveyIntakeEvaluationTest()
         {
+            _userRepository = new Mock<ICollectionRepository<Model.User>>();
             _personalInfoRepository = new Mock<ICollectionRepository<PersonalInformation>>();
             _surveyRepository = new Mock<ICollectionRepository<SurveyIntake>>();
             _surveyRepository.Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<SurveyIntake>())).Verifiable();
@@ -27,7 +27,9 @@ namespace User.Api.Tests
         [Theory, MemberData(nameof(PositiveData))]
         public async Task SurveyIntakeEvaluation_PositiveRiskGroup(SurveyIntake intake)
         {
-            var userService = new UserService(_personalInfoRepository.Object, _surveyRepository.Object, _phoneVerificationService.Object);
+            var userService = new UserService(_userRepository.Object,
+                                              _personalInfoRepository.Object, _surveyRepository.Object,
+                                              _phoneVerificationService.Object);
 
             var result = await userService.UpdateSurveyInfo("", intake);
 
@@ -38,7 +40,9 @@ namespace User.Api.Tests
         [MemberData(nameof(RecoveredData))]
         public async Task SurveyIntakeEvaluation_RecoveredRiskGroup(SurveyIntake intake)
         {
-            var userService = new UserService(_personalInfoRepository.Object, _surveyRepository.Object, _phoneVerificationService.Object);
+            var userService = new UserService(_userRepository.Object,
+                                              _personalInfoRepository.Object, _surveyRepository.Object,
+                                              _phoneVerificationService.Object);
 
             var result = await userService.UpdateSurveyInfo("", intake);
 
@@ -49,7 +53,9 @@ namespace User.Api.Tests
         [MemberData(nameof(HealthyData))]
         public async Task SurveyIntakeEvaluation_HealthyRiskGroup(SurveyIntake intake)
         {
-            var userService = new UserService(_personalInfoRepository.Object, _surveyRepository.Object, _phoneVerificationService.Object);
+            var userService = new UserService(_userRepository.Object,
+                                              _personalInfoRepository.Object, _surveyRepository.Object,
+                                              _phoneVerificationService.Object);
 
             var result = await userService.UpdateSurveyInfo("", intake);
 
@@ -60,7 +66,9 @@ namespace User.Api.Tests
         [MemberData(nameof(HealthyKeepSocialDistanceData))]
         public async Task SurveyIntakeEvaluation_HealthyKeepSocialDistanceRiskGroup(SurveyIntake intake)
         {
-            var userService = new UserService(_personalInfoRepository.Object, _surveyRepository.Object, _phoneVerificationService.Object);
+            var userService = new UserService(_userRepository.Object,
+                                              _personalInfoRepository.Object, _surveyRepository.Object,
+                                              _phoneVerificationService.Object);
 
             var result = await userService.UpdateSurveyInfo("", intake);
 
@@ -71,7 +79,9 @@ namespace User.Api.Tests
         [MemberData(nameof(FluLikeData))]
         public async Task SurveyIntakeEvaluation_FluLikeRiskGroup(SurveyIntake intake)
         {
-            var userService = new UserService(_personalInfoRepository.Object, _surveyRepository.Object, _phoneVerificationService.Object);
+            var userService = new UserService(_userRepository.Object,
+                                              _personalInfoRepository.Object, _surveyRepository.Object,
+                                              _phoneVerificationService.Object);
 
             var result = await userService.UpdateSurveyInfo("", intake);
 
@@ -83,7 +93,9 @@ namespace User.Api.Tests
         [MemberData(nameof(HighProbabilityRecentTravelData))]
         public async Task SurveyIntakeEvaluation_HighProbabilityRiskGroup(SurveyIntake intake)
         {
-            var userService = new UserService(_personalInfoRepository.Object, _surveyRepository.Object, _phoneVerificationService.Object);
+            var userService = new UserService(_userRepository.Object,
+                                              _personalInfoRepository.Object, _surveyRepository.Object,
+                                              _phoneVerificationService.Object);
 
             var result = await userService.UpdateSurveyInfo("", intake);
 
@@ -94,7 +106,9 @@ namespace User.Api.Tests
         [MemberData(nameof(LowProbabilityData))]
         public async Task SurveyIntakeEvaluation_LowProbabilityRiskGroup(SurveyIntake intake)
         {
-            var userService = new UserService(_personalInfoRepository.Object, _surveyRepository.Object, _phoneVerificationService.Object);
+            var userService = new UserService(_userRepository.Object,
+                                              _personalInfoRepository.Object, _surveyRepository.Object,
+                                              _phoneVerificationService.Object);
 
             var result = await userService.UpdateSurveyInfo("", intake);
 
@@ -251,6 +265,6 @@ namespace User.Api.Tests
                 };
             }
         }
-    
+
     }
 }
