@@ -33,6 +33,11 @@ namespace User.Api.Services
             await _surveyRepository.UpdateAsync(userId, value);
 
             var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                user = new Model.User();
+            }
+
             user.FinalStatus = user.Status = value.Evaluate();
             await _userRepository.UpdateAsync(userId, user);
             return user.Status;
@@ -43,7 +48,7 @@ namespace User.Api.Services
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null)
             {
-                throw new NotFoundException();
+                return RiskGroup.Healthy;
             }
 
             return user.Status;
