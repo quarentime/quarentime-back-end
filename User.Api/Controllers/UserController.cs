@@ -100,7 +100,7 @@ namespace User.Api.Controllers
         }
 
         [HttpPost]
-        [Route("Invites/Accept")]
+        [Route("FriendRequests/Accept")]
         public async Task<Response> AcceptInvite(AcceptInviteRequestContract invite)
         {
             await _contactsService.AcceptInviteAsync(UserId.Value, invite.InviteId);
@@ -108,7 +108,7 @@ namespace User.Api.Controllers
         }
 
         [HttpGet]
-        [Route("Invites/Pending")]
+        [Route("FriendRequests/Pending")]
         public async Task<Response<IEnumerable<Invite>>> GetPendingInvites()
         {
             var result = await _contactsService.GetPendingInvitesAsync(UserId.Value);
