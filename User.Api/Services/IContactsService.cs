@@ -11,5 +11,6 @@ namespace User.Api.Services
         Task<IEnumerable<Contact>> GetAllContactsAsync(string userId);
         Task AcceptInviteAsync(string userId, string inviteId);
         Task RejectInvite(string inviteId);
+        Task<ContactTrace> GetContactTrace(string userId);
     }
 }

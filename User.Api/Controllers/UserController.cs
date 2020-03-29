@@ -100,6 +100,14 @@ namespace User.Api.Controllers
             return new Response<IEnumerable<Contact>>(result);
         }
 
+        [HttpGet]
+        [Route("Contacts/Trace")]
+        public async Task<Response<ContactTrace>> GetContactTrace()
+        {
+            var result = await _contactsService.GetContactTrace(UserId.Value);
+            return new Response<ContactTrace>(result);
+        }
+
         [HttpPost]
         [Route("FriendRequests/Accept")]
         public async Task<Response> AcceptInvite(AcceptInviteRequestContract invite)

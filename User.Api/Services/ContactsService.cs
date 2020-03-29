@@ -113,5 +113,21 @@ namespace User.Api.Services
         {
             await _inviteRepository.DeleteAsync(inviteId);
         }
+
+        public async Task<ContactTrace> GetContactTrace(string userId)
+        {
+            var trace = await _userService.GetUserTraceData(userId);
+
+            var contacts = await _contactRepository.GetAllAsync(rootId: userId);
+
+            trace.Contacts = contacts.Select(c => new ContactTrace
+            {
+                Name = c.Name, 
+                FinalStatus = c.Status, 
+                ColorHex = RiskGroupToHexMapper.HexMapper[c.Status]
+            });
+
+            return trace;
+        }
     }
 }

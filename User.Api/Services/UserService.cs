@@ -40,7 +40,7 @@ namespace User.Api.Services
 
             user.FinalStatus = user.Status = value.Evaluate();
             await _userRepository.UpdateAsync(userId, user);
-            return user.Status;
+            return user.FinalStatus;
         }
 
         public async Task<RiskGroup> GetRiskGroupAsync(string userId)
@@ -51,7 +51,33 @@ namespace User.Api.Services
                 return RiskGroup.Healthy;
             }
 
-            return user.Status;
+            return user.FinalStatus;
+        }
+
+        public async Task<ContactTrace> GetUserTraceData(string userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                user = new Model.User
+                {
+                    Status = RiskGroup.Healthy,
+                    FinalStatus = RiskGroup.Healthy
+                };
+            }
+
+            return new ContactTrace
+            {
+                Name = await GetUserName(userId),
+                FinalStatus = user.FinalStatus,
+                ColorHex = RiskGroupToHexMapper.HexMapper[user.FinalStatus]
+            };
+        }
+
+        public async Task<string> GetUserName(string userId)
+        {
+            var user = await _personalInformationRepository.GetByIdAsync(userId);
+            return user.DisplayName;
         }
 
         public async Task<PersonalInformation> GetPersonalInformationAsync(string userId)

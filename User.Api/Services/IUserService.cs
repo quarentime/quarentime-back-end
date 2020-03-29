@@ -13,5 +13,7 @@ namespace User.Api.Services
         Task RequestPhoneValidation(string userId);
         Task<bool> CheckVerificationCode(string userId, string verificationCode);
         Task<PersonalInformation> GetUserByPhone(string phoneNumber);
+        Task<ContactTrace> GetUserTraceData(string userId);
+        Task<string> GetUserName(string userId);
     }
 }
