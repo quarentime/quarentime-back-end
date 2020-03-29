@@ -26,7 +26,7 @@ namespace Notification.Api.Controllers
         public async Task SmsAlert()
         {
             //TODO: Handle http task request sent from cloud tasks api. Should have a working live instance of the api on cloud.
-            var request = new SmsAlertRequest { UserPhoneNumber = "test", ContactName = "test", ContactStatus = "Okay"};
+            var request = new SmsAlertRequest { UserPhoneNumber = "+38978691342", ContactName = "Edmar", ContactStatus = "SuspectedCase"};
             await _notificationService.SmsAlert(request);
             //var body = Request.Body;
             //Console.WriteLine(body);
