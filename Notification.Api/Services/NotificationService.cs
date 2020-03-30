@@ -21,7 +21,7 @@ namespace Notification.Api.Services
             throw new NotImplementedException();
         }
 
-        public async Task SmsAlert(SmsAlertRequest request)
+        public async Task SmsAlert(SmsAlertContract request)
         {
             await InitTwilioClient();
             var senderNumber = await _configurationService.GetValue("twilio_sender_number");
@@ -39,7 +39,6 @@ namespace Notification.Api.Services
             var authToken = await _configurationService.GetValue("twilio_auth_token");
 
             TwilioClient.Init(accountSid, authToken);
-
         }
     }
 }

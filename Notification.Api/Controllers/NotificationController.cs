@@ -1,9 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Notification.Api.Models;
 using Notification.Api.Services;
+using System.Threading.Tasks;
 
 namespace Notification.Api.Controllers
 {
@@ -23,13 +22,9 @@ namespace Notification.Api.Controllers
 
         [HttpPost]
         [Route("SmsAlert")]
-        public async Task SmsAlert()
+        public async Task SmsAlert(SmsAlertContract request)
         {
-            //TODO: Handle http task request sent from cloud tasks api. Should have a working live instance of the api on cloud.
-            var request = new SmsAlertRequest { UserPhoneNumber = "+38978691342", ContactName = "Edmar", ContactStatus = "SuspectedCase"};
             await _notificationService.SmsAlert(request);
-            //var body = Request.Body;
-            //Console.WriteLine(body);
         }
     }
 }
