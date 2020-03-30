@@ -1,0 +1,11 @@
+{
+  "name": "globals",
+  "values": [{
+    "key": "host",
+    "value": "https://quarentime-user-api-rcgccs4vga-ew.a.run.app"
+  },
+  {
+    "key": "token",
+    "value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjgzYTczOGUyMWI5MWNlMjRmNDM0ODBmZTZmZWU0MjU4Yzg0ZGI0YzUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vcXVhcmVudGltZSIsImF1ZCI6InF1YXJlbnRpbWUiLCJhdXRoX3RpbWUiOjE1ODU1MDkyNjUsInVzZXJfaWQiOiJJQzZmdUtEeWVzYVBIOTVPam9SblM1cEVjR0EyIiwic3ViIjoiSUM2ZnVLRHllc2FQSDk1T2pvUm5TNXBFY0dBMiIsImlhdCI6MTU4NTYxMDc4NSwiZXhwIjoxNTg1NjE0Mzg1LCJlbWFpbCI6ImpwcnV1ZEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsianBydXVkQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.YpLPum9mG5bwfUnZMkpLhk6TOhKfKHwzOYlKg4AsICItRh8FKlAye8Mq8guWUJg_UJKS9uXa3-dfqeUcuRDWh0CNJlLPfXyCRNc9Pa8a9zWNETFC_n_h_jmh8x9VA4RzLRdGR0IOCiMPpoyZP35k_3zjraixGLjQ5OEoxYzg9mmCbnH6YP9J9AmW3_6iCeGfV6aWjbvf8UstoCKwrtgRfAau0Ic1m4wDBy4sqwJfu1Y6VGlmT-0gHkElwPP82yMjfmto1VQn6xyKJm0nBaVb3xQPxGxfDCg8Uu4woSiHoI3piLyrjtau-MgB4wY_RYIecdgdn3L12J5kNyTqLpvJ0w"
+  }]
+}
