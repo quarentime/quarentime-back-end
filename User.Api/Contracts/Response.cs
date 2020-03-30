@@ -21,9 +21,9 @@ namespace User.Api.Contracts
         }
     }
 
-    public class SucessResponse : Response<string>
+    public class SuccessResponse : Response<string>
     {
-        public SucessResponse() : base("sucess")
+        public SuccessResponse() : base("success")
         {
 
         }

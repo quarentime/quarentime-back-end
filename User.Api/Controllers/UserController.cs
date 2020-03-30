@@ -34,7 +34,7 @@ namespace User.Api.Controllers
         {
             await _userService.UpdatePersonalInformationAsync(UserId.Value, value);
 
-            return new SucessResponse();
+            return new SuccessResponse();
         }
 
         [HttpPost]
@@ -68,7 +68,7 @@ namespace User.Api.Controllers
         public async Task<Response> VerifyPhoneNumber()
         {
             await _userService.RequestPhoneValidation(UserId.Value);
-            return new SucessResponse();
+            return new SuccessResponse();
         }
 
         [HttpPost]
