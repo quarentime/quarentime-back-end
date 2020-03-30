@@ -56,7 +56,8 @@ namespace User.Api
                     {
                         c.SwaggerDoc("v1", new OpenApiInfo { Title = "Users microservice", Version = "v1" });
 
-                    });
+                    })
+                    .AddSwaggerGenNewtonsoftSupport();
 
             services.AddCors(options => 
             {

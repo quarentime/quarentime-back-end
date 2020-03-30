@@ -1,3 +1,4 @@
+using System;
 using Google.Cloud.Firestore;
 
 namespace User.Api.Model
@@ -12,5 +13,6 @@ namespace User.Api.Model
         [FirestoreProperty] public string Name { get; set; }
         [FirestoreProperty] public string PhoneNumber { get; set; }
         [FirestoreProperty] public bool Pending { get; set; }
+        [FirestoreProperty] public DateTime DateAdded { get; set; }
     }
 }

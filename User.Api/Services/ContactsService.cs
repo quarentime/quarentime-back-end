@@ -43,6 +43,7 @@ namespace User.Api.Services
                     FromUserPhoneNumber = currentUser.PhoneNumber,
                     PhoneNumber = contact.PhoneNumber,
                     Name = contact.Name,
+                    DateAdded = DateTime.UtcNow,
                     Pending = true
                 });
             }
@@ -56,21 +57,21 @@ namespace User.Api.Services
                 throw new NotFoundException();
             }
 
-            return await _inviteRepository.GetByFieldAsync(nameof(Invite.PhoneNumber),user.PhoneNumber);
+            return await _inviteRepository.GetByFieldAsync(nameof(Invite.PhoneNumber), user.PhoneNumber);
         }
 
         public async Task<IEnumerable<Contact>> GetAllContactsAsync(string userId)
         {
             // My contacts
-            var contacts =  (await _contactRepository.GetAllAsync(rootId: userId)).ToList();
+            var contacts = (await _contactRepository.GetAllAsync(rootId: userId)).ToList();
 
             // Invites that I sent
             var invites = await _inviteRepository.GetByFieldAsync(nameof(Invite.FromUserId), userId);
 
             contacts.AddRange(invites.Select(i => new Contact
             {
-                Name = i.Name, 
-                PhoneNumber = i.PhoneNumber, 
+                Name = i.Name,
+                PhoneNumber = i.PhoneNumber,
                 Pending = i.Pending
             }));
 
@@ -88,19 +89,19 @@ namespace User.Api.Services
             // Adding contact to current user
             await _contactRepository.InsertAsync(rootId: userId, documentId: invite.FromUserId, value: new Contact
             {
-                Name = invite.FromUserName, 
-                PhoneNumber = invite.FromUserPhoneNumber, 
-                UserId = invite.FromUserId, 
+                Name = invite.FromUserName,
+                PhoneNumber = invite.FromUserPhoneNumber,
+                UserId = invite.FromUserId,
                 DateAdded = DateTime.UtcNow,
                 Status = await _userService.GetRiskGroupAsync(invite.FromUserId)
             });
 
             // Adding contact to the other user
-             await _contactRepository.InsertAsync(rootId: invite.FromUserId, documentId: userId, value: new Contact
+            await _contactRepository.InsertAsync(rootId: invite.FromUserId, documentId: userId, value: new Contact
             {
-                Name = invite.Name, 
-                PhoneNumber = invite.PhoneNumber, 
-                UserId = userId, 
+                Name = invite.Name,
+                PhoneNumber = invite.PhoneNumber,
+                UserId = userId,
                 DateAdded = DateTime.UtcNow,
                 Status = await _userService.GetRiskGroupAsync(userId)
             });
@@ -122,8 +123,8 @@ namespace User.Api.Services
 
             trace.Contacts = contacts.Select(c => new ContactTrace
             {
-                Name = c.Name, 
-                FinalStatus = c.Status, 
+                Name = c.Name,
+                FinalStatus = c.Status,
                 ColorHex = RiskGroupToHexMapper.HexMapper[c.Status]
             });
 

@@ -12,6 +12,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.1.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="5.2.1" />
     <PackageReference Include="Twilio" Version="5.38.0" />
   </ItemGroup>
 
