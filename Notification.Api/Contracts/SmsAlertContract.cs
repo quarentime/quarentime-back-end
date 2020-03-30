@@ -1,6 +1,6 @@
 ﻿namespace Notification.Api.Models
 {
-    public class SmsAlertRequest
+    public class SmsAlertContract
     {
         public string ContactName { get; set; }
         public string ContactStatus { get; set; }

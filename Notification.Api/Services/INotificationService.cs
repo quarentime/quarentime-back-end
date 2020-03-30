@@ -6,6 +6,6 @@ namespace Notification.Api.Services
     public interface INotificationService
     {
         Task PushNotification();
-        Task SmsAlert(SmsAlertRequest request);
+        Task SmsAlert(SmsAlertContract request);
     }
 }
