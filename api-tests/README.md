@@ -13,8 +13,8 @@ To run the tests, you must do the following
     1. `export QUARENTIME_FIREBASE_TOKEN=%YOUR_TOKEN`
 1. Install Newman locally
     1. `npm install -g newman`
-    1. `npm install -g newman-reporter-html`
-1. Run `newman run basic-test-suite/Quarentime-API-Tests.postman_collection.json  -e basic-test-suite/api_env_vars.json -r html,cli,junit --env-var "token=$QUARENTIME_FIREBASE_TOKEN"`
+    1. `npm install -g newman-reporter-htmlextra`
+1. Run `newman run basic-test-suite/Quarentime-API-Tests.postman_collection.json  -e basic-test-suite/api_env_vars.json -r htmlextra,cli --env-var "token=$QUARENTIME_FIREBASE_TOKEN"`
 
 ### Extending the tests
 1. Open Postman locally
