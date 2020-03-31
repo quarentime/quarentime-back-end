@@ -89,7 +89,7 @@ namespace User.Api.Controllers
         public async Task<Response> AddContacts(ContactCollectionRequestContract contactCollection)
         {
             await _contactsService.InsertManyAsync(UserId.Value, contactCollection.Contacts);
-            return new SucessResponse();
+            return new SuccessResponse();
         }
 
         [HttpGet]
@@ -113,7 +113,7 @@ namespace User.Api.Controllers
         public async Task<Response> AcceptInvite(AcceptInviteRequestContract invite)
         {
             await _contactsService.AcceptInviteAsync(UserId.Value, invite.InviteId);
-            return new SucessResponse();
+            return new SuccessResponse();
         }
 
         [HttpDelete]
@@ -121,7 +121,7 @@ namespace User.Api.Controllers
         public async Task<Response> RejectInvite(RejectInviteRequestContract invite)
         {
             await _contactsService.RejectInvite(invite.InviteId);
-            return new SucessResponse();
+            return new SuccessResponse();
         }
 
         [HttpGet]
