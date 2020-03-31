@@ -54,6 +54,7 @@ namespace User.Api
 
             services.AddSwaggerGen(c =>
                     {
+                        c.EnableAnnotations();
                         c.SwaggerDoc("v1", new OpenApiInfo { Title = "Users microservice", Version = "v1" });
 
                     })

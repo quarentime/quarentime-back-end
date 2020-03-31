@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using User.Api.Contracts;
 using User.Api.Exceptions;
 using User.Api.Model;
@@ -22,7 +23,8 @@ namespace User.Api.Controllers
 
         [HttpGet]
         [Route("PersonalInformation")]
-        public async Task<Response<PersonalInformation>> GetPersonalInfoAsync()
+        [SwaggerResponse(200, type: typeof(Response<PersonalInformation>))]
+        public async Task<IActionResult> GetPersonalInfoAsync()
         {
             var result = await _userService.GetPersonalInformationAsync(UserId.Value);
             if (result == null)
@@ -30,34 +32,37 @@ namespace User.Api.Controllers
                 throw new NotFoundException();
             }
 
-            return new Response<PersonalInformation>(result);
+            return Ok(new Response<PersonalInformation>(result));
         }
 
         [HttpPost]
         [Route("PersonalInformation")]
-        public async Task<Response> UpdatePersonalInfoAsync(PersonalInformation value)
+        [SwaggerResponse(201, type: typeof(SuccessResponse))]
+        public async Task<IActionResult> UpdatePersonalInfoAsync(PersonalInformation value)
         {
             await _userService.UpdatePersonalInformationAsync(UserId.Value, value);
 
-            return new SuccessResponse();
+            return Created(new SuccessResponse());
         }
 
         [HttpPost]
         [Route("Survey")]
-        public async Task<Response<SurveyResponse>> UpdateSurvey(SurveyIntake value)
+        [SwaggerResponse(201, type: typeof(Response<SurveyResponse>))]
+        public async Task<IActionResult> UpdateSurvey(SurveyIntake value)
         {
             var answer = await _userService.UpdateSurveyInfo(UserId.Value, value);
 
-            return new Response<SurveyResponse>(new SurveyResponse
+            return Created(new Response<SurveyResponse>(new SurveyResponse
             {
                 Status = answer,
                 ColorHex = RiskGroupToHexMapper.HexMapper[answer]
-            });
+            }));
         }
 
         [HttpGet]
         [Route("Survey")]
-        public async Task<Response<SurveyIntake>> GetSurveyInfo()
+        [SwaggerResponse(200, type: typeof(Response<SurveyIntake>))]
+        public async Task<IActionResult> GetSurveyInfo()
         {
             var result = await _userService.GetSurveyInfoAsync(UserId.Value);
             if (result == null)
@@ -65,71 +70,79 @@ namespace User.Api.Controllers
                 throw new NotFoundException();
             }
 
-            return new Response<SurveyIntake>(result);
+            return Ok(new Response<SurveyIntake>(result));
         }
 
         [HttpPost]
         [Route("VerifyPhone")]
-        public async Task<Response> VerifyPhoneNumber()
+        [SwaggerResponse(201, type: typeof(SuccessResponse))]
+        public async Task<IActionResult> VerifyPhoneNumber()
         {
             await _userService.RequestPhoneValidation(UserId.Value);
-            return new SuccessResponse();
+            return Created(new SuccessResponse());
         }
 
         [HttpPost]
         [Route("ConfirmVerificationCode")]
-        public async Task<Response<bool>> ConfirmPhoneNumber(PhoneVerificationContract phoneVerificationContract)
+        [SwaggerResponse(200, type: typeof(Response<bool>))]
+        public async Task<IActionResult> ConfirmPhoneNumber(PhoneVerificationContract phoneVerificationContract)
         {
-            var result = await _userService.CheckVerificationCode(UserId.Value,phoneVerificationContract.Code);
-            return new Response<bool>(result);
+            var result = await _userService.CheckVerificationCode(UserId.Value, phoneVerificationContract.Code);
+            return Ok(new Response<bool>(result));
         }
 
         [HttpPost]
         [Route("Contacts")]
-        public async Task<Response> AddContacts(ContactCollectionRequestContract contactCollection)
+        [SwaggerResponse(201, type: typeof(SuccessResponse))]
+        public async Task<IActionResult> AddContacts(ContactCollectionRequestContract contactCollection)
         {
             await _contactsService.InsertManyAsync(UserId.Value, contactCollection.Contacts);
-            return new SuccessResponse();
+            return Created(new SuccessResponse());
         }
 
         [HttpGet]
         [Route("Contacts")]
-        public async Task<Response<IEnumerable<Contact>>> GetContacts()
+        [SwaggerResponse(200, type: typeof(Response<IEnumerable<Contact>>))]
+        public async Task<IActionResult> GetContacts()
         {
             var result = await _contactsService.GetAllContactsAsync(UserId.Value);
-            return new Response<IEnumerable<Contact>>(result);
+            return Ok(new Response<IEnumerable<Contact>>(result));
         }
 
         [HttpGet]
         [Route("Contacts/Trace")]
-        public async Task<Response<ContactTrace>> GetContactTrace()
+        [SwaggerResponse(200, type: typeof(Response<ContactTrace>))]
+        public async Task<IActionResult> GetContactTrace()
         {
             var result = await _contactsService.GetContactTrace(UserId.Value);
-            return new Response<ContactTrace>(result);
+            return Ok(new Response<ContactTrace>(result));
         }
 
         [HttpPost]
         [Route("FriendRequests/Accept")]
-        public async Task<Response> AcceptInvite(AcceptInviteRequestContract invite)
+        [SwaggerResponse(201, type: typeof(SuccessResponse))]
+        public async Task<IActionResult> AcceptInvite(AcceptInviteRequestContract invite)
         {
             await _contactsService.AcceptInviteAsync(UserId.Value, invite.InviteId);
-            return new SuccessResponse();
+            return Created(new SuccessResponse());
         }
 
         [HttpDelete]
         [Route("FriendRequests/Reject")]
-        public async Task<Response> RejectInvite(RejectInviteRequestContract invite)
+        [SwaggerResponse(200, type: typeof(SuccessResponse))]
+        public async Task<IActionResult> RejectInvite(RejectInviteRequestContract invite)
         {
             await _contactsService.RejectInvite(invite.InviteId);
-            return new SuccessResponse();
+            return Ok(new SuccessResponse());
         }
 
         [HttpGet]
         [Route("FriendRequests/Pending")]
-        public async Task<Response<IEnumerable<Invite>>> GetPendingInvites()
+        [SwaggerResponse(200, type: typeof(Response<IEnumerable<Invite>>))]
+        public async Task<IActionResult> GetPendingInvites()
         {
             var result = await _contactsService.GetPendingInvitesAsync(UserId.Value);
-            return new Response<IEnumerable<Invite>>(result);
+            return Ok(new Response<IEnumerable<Invite>>(result));
         }
     }
 }
