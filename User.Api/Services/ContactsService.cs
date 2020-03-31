@@ -119,13 +119,14 @@ namespace User.Api.Services
         {
             var trace = await _userService.GetUserTraceData(userId);
 
-            var contacts = await _contactRepository.GetAllAsync(rootId: userId);
+            var contacts = await GetAllContactsAsync(userId);
 
             trace.Contacts = contacts.Select(c => new ContactTrace
             {
                 Name = c.Name,
                 FinalStatus = c.Status,
-                ColorHex = RiskGroupToHexMapper.HexMapper[c.Status]
+                ColorHex = RiskGroupToHexMapper.HexMapper[c.Status],
+                Pending = c.Pending
             });
 
             return trace;
