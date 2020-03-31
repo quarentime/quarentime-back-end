@@ -5,11 +5,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace User.Api.Services
 {
-    public class CollectionRepository<T>: ICollectionRepository<T> where T:class
+    public class CollectionRepository<T> : ICollectionRepository<T> where T : class
     {
         protected CollectionReference Collection { get; private set; }
         protected FirestoreDb Firestore { get; private set; }
-        
+
         public CollectionRepository(IConfiguration configuration)
         {
             Firestore = FirestoreDb.Create(configuration.GetValue<string>("GCPProjectName"));
@@ -34,7 +34,6 @@ namespace User.Api.Services
         {
             var snapshot = await Collection.GetSnapshotAsync();
             var result = new List<T>();
-
             foreach (var doc in snapshot.Documents)
             {
                 if (!doc.Exists) { continue; }
@@ -54,9 +53,29 @@ namespace User.Api.Services
             return null;
         }
 
+        public async Task<IEnumerable<T>> GetByFieldAsync(string fieldName, string value)
+        {
+            var snapshot = await Collection.WhereEqualTo(fieldName, value)
+                                     .GetSnapshotAsync();
+
+            var result = new List<T>();
+            foreach (var doc in snapshot.Documents)
+            {
+                if (!doc.Exists) { continue; }
+                result.Add(doc.ConvertTo<T>());
+            }
+            return result;
+        }
+
         public virtual async Task InsertAsync(string documentId, T value)
         {
             var doc = Collection.Document(documentId);
+            await doc.SetAsync(value);
+        }
+
+        public virtual async Task InsertAsync(T value)
+        {
+            var doc = Collection.Document();
             await doc.SetAsync(value);
         }
 
