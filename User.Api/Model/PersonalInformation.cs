@@ -17,7 +17,7 @@ namespace User.Api.Model
         {
             get
             {
-                return $"{Name} {Surname}";
+                return string.Join(' ', Name, Surname).Trim();
             }
         }
     }
