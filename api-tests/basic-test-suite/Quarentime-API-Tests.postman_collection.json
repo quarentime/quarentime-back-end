@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "a779a08c-4e6a-47e5-a49b-a15cb8d6a49c",
-		"name": "Quarentime",
+		"name": "Quarentime-API-Tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -50,7 +50,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test New User\",\n\t\"phone_number\": \"+5491133108174\",\n\t\"age\": 34\n}",
+							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test\",\n\t\"surname\": \"New User\",\n\t\"phone_number\": \"+5491133108173\",\n\t\"age\": 34\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -85,9 +85,10 @@
 									"    var jsonData = pm.response.json();",
 									"    var jsonDataResult = jsonData.result;",
 									"    pm.expect(jsonDataResult.email).to.eql(\"test_new_user@quarentime.org\");",
-									"    pm.expect(jsonDataResult.name).to.eql(\"Test New User\");",
+									"    pm.expect(jsonDataResult.name).to.eql(\"Test\");",
+									"    pm.expect(jsonDataResult.surname).to.eql(\"New User\");",
 									"    pm.expect(jsonDataResult.age).to.eql(34);",
-									"    pm.expect(jsonDataResult.phone_number).to.eql(\"+5491133108174\");",
+									"    pm.expect(jsonDataResult.phone_number).to.eql(\"+5491133108173\");",
 									"    pm.expect(jsonDataResult.display_name).to.eql(\"Test New User\");",
 									"    pm.expect(jsonDataResult.verified).to.eql(false);",
 									"});"
@@ -117,6 +118,239 @@
 							"path": [
 								"User",
 								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation Verified",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test New User\",\n\t\"phone_number\": \"+5491133108174\",\n\t\"age\": 34,\n\t\"verified\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation Verified",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Validate Response\", function() {",
+									"    var jsonData = pm.response.json();",
+									"    var jsonDataResult = jsonData.result;",
+									"    pm.expect(jsonDataResult.email).to.eql(\"test_new_user@quarentime.org\");",
+									"    pm.expect(jsonDataResult.name).to.eql(\"Test New User\");",
+									"    pm.expect(jsonDataResult.age).to.eql(34);",
+									"    pm.expect(jsonDataResult.phone_number).to.eql(\"+5491133108174\");",
+									"    pm.expect(jsonDataResult.display_name).to.eql(\"Test New User\");",
+									"    pm.expect(jsonDataResult.verified).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/VerifyPhone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a2fda554-39f6-40e5-ae02-7010457b945c",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/VerifyPhone",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"VerifyPhone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
 							]
 						}
 					},
@@ -1147,6 +1381,125 @@
 					"response": []
 				},
 				{
+					"name": "/User/Survey Negative Low Probability Travelled 14 days and Dry Cough",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#F7BA61\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": true,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"dry_cough\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Low Probability Travelled 14 days and Dry Cough",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(true);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([\"dry_cough\"]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/User/Survey Negative",
 					"event": [
 						{
@@ -1364,15 +1717,15 @@
 	],
 	"variable": [
 		{
-			"id": "0d6242b2-9ccc-4021-b427-8268b18b1210",
+			"id": "ed1369ce-252f-4b96-834a-2d4978893155",
 			"key": "host",
 			"value": "https://quarentime-user-api-rcgccs4vga-ew.a.run.app/",
 			"type": "string"
 		},
 		{
-			"id": "e45c5965-6381-4ec7-a639-72b55783d246",
+			"id": "05286294-182c-44e0-9b9b-9665616815b3",
 			"key": "token",
-			"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFmODhiODE0MjljYzQ1MWEzMzVjMmY1Y2RiM2RmYjM0ZWIzYmJjN2YiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vcXVhcmVudGltZSIsImF1ZCI6InF1YXJlbnRpbWUiLCJhdXRoX3RpbWUiO    jE1ODU1MDkyNjUsInVzZXJfaWQiOiJJQzZmdUtEeWVzYVBIOTVPam9SblM1cEVjR0EyIiwic3ViIjoiSUM2ZnVLRHllc2FQSDk1T2pvUm5TNXBFY0dBMiIsImlhdCI6MTU4NTUwOTI2NSwiZXhwIjoxNTg1NTEyODY1LCJlbWFpbCI6ImpwcnV1ZEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsI    mZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsianBydXVkQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.hnnxaH_rAu3iKDlT2Pgk9mS0zMR5YNZuA2BzlrtFvpm6l30bdcJXZT88HXW99P-mtkckyiSEEabTU_VeFf6Z8EZ5EgPF9l3Smw-V59MRIfBfIE_ouvyr    ZwRiKvLp5fIHafDmA_f50lbnuzTY1NxonVa35GEehPW_RQwnxU2L2oozknD0L4GrYKpqivxMnoaz7wcOuHb4gcW3dPHNUbdUGpWg5NKpcrvJGuyy7FoKJrDPT_xXk4x9rbJ3hPn-_zW2JmO47F5Rb7yd-wp3Ohpi6g_osb8hjkFKAgW8TAUNWkuHq-81ijqrF7p15tTK1zSitfY5755VkyJLvYML7jHzFA",
+			"value": "",
 			"type": "string"
 		}
 	],
