@@ -3,9 +3,5 @@
   "values": [{
     "key": "host",
     "value": "https://quarentime-user-api-rcgccs4vga-ew.a.run.app"
-  },
-  {
-    "key": "token",
-    "value": "${FIREBASE_API_ACCESS_TOKEN}"
   }]
 }
