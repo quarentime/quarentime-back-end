@@ -11,7 +11,9 @@ To run the tests, you must do the following
 1. `cd api-tests/`
 1. open the file `api_env_vars.json` and replace `${FIREBASE_API_ACCESS_TOKEN}` with your personal token
 1. Install Newman locally
-1. Run `newman run basic-test-suite/Quarentime.api_tests_postman_collection.json  -e basic-test-suite/api_env_vars.json`
+    1. `npm install -g newman`
+    1. `npm install newman-reporter-html`
+1. Run `newman run basic-test-suite/Quarentime.api_tests_postman_collection.json  -e basic-test-suite/api_env_vars.json -r html,cli`
 
 ### Extending the tests
 1. Open Postman locally
