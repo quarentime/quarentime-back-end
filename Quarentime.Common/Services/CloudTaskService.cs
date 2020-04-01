@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Quarentime.Common.Contracts;
 using Quarentime.Common.Models;
 using System;
@@ -26,12 +28,18 @@ namespace Quarentime.Common.Services
             var client = await gct.CloudTasksClient.CreateAsync();
             var tuple = GetQueueByType(type);
 
-            var queueName = _configuration.GetSection(tuple.Item1).Value;
+            var queueName = _configuration.GetSection(tuple.queue).Value;
             var location = _configuration.GetSection(Constants.LOCATION).Value;
             var projectId = _configuration.GetSection(Constants.PROJECT_ID).Value;
             var serviceUrl = _configuration.GetSection(Constants.NOTIFICATION_SERVICE_URL).Value;
 
             gct.QueueName queue = new gct.QueueName(projectId, location, queueName);
+
+            var jsonSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
+            };
+            jsonSettings.Converters.Add(new StringEnumConverter(new SnakeCaseNamingStrategy()));
 
             try
             {
@@ -43,8 +51,8 @@ namespace Quarentime.Common.Services
                         HttpRequest = new gct.HttpRequest
                         {
                             HttpMethod = gct.HttpMethod.Post,
-                            Body = ByteString.CopyFromUtf8(JsonConvert.SerializeObject(contract)),
-                            Url = $"{serviceUrl}{tuple.Item2}"
+                            Body = ByteString.CopyFromUtf8(JsonConvert.SerializeObject(contract, jsonSettings)),
+                            Url = $"{serviceUrl}{tuple.resourceUrl}"
                         }
                     }
                 });
@@ -55,7 +63,7 @@ namespace Quarentime.Common.Services
 
         }
 
-        private (string, string) GetQueueByType(NotificationType type) => type switch
+        private (string queue, string resourceUrl) GetQueueByType(NotificationType type) => type switch
         {
             NotificationType.PushNotifications => (Constants.PUSH_NOTIFICATIONS_QUEUE, "/notification/push"),
             NotificationType.SmsNotifications => (Constants.SMS_NOTIFICATIONS_QUEUE, "/notification/sms"),
