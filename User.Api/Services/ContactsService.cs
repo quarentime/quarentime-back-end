@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using User.Api.Exceptions;
 using User.Api.Model;
+using Quarentime.Common.Repository;
 
 namespace User.Api.Services
 {

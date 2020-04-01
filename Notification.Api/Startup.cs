@@ -37,7 +37,9 @@ namespace Notification.Api
 
             services
                 .AddScoped(typeof(ICollectionRepository<>), typeof(CollectionRepository<>))
+                .AddScoped(typeof(ISubCollectionRepository<>), typeof(SubCollectionRepository<>))
                 .AddScoped<IConfigurationService, ConfigurationService>()
+                .AddScoped<IDevicesService, DevicesService>()
                 .AddScoped<INotificationService, NotificationService>();
         }
 
