@@ -54,9 +54,11 @@ namespace User.Api
 
             services.AddSwaggerGen(c =>
                     {
+                        c.EnableAnnotations();
                         c.SwaggerDoc("v1", new OpenApiInfo { Title = "Users microservice", Version = "v1" });
 
-                    });
+                    })
+                    .AddSwaggerGenNewtonsoftSupport();
 
             services.AddCors(options => 
             {
@@ -71,9 +73,11 @@ namespace User.Api
 
             services
                 .AddScoped(typeof(ICollectionRepository<>), typeof(CollectionRepository<>))
+                .AddScoped(typeof(ISubCollectionRepository<>), typeof(SubCollectionRepository<>))
                 .AddScoped<IUserService, UserService>()
                 .AddScoped<IPhoneVerificationService, PhoneVerificationService>()
-                .AddScoped<IConfigurationService, ConfigurationService>();
+                .AddScoped<IConfigurationService, ConfigurationService>()
+                .AddScoped<IContactsService, ContactsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
