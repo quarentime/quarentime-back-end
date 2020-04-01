@@ -15,5 +15,6 @@ namespace User.Api.Services
         Task<PersonalInformation> GetUserByPhone(string phoneNumber);
         Task<ContactTrace> GetUserTraceData(string userId);
         Task<string> GetUserName(string userId);
+        Task RegisterUserDeviceToken(string userId, string token);
     }
 }

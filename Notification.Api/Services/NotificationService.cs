@@ -16,21 +16,21 @@ namespace Notification.Api.Services
             _configurationService = configurationService;
         }
 
-        public Task PushNotification()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task SmsAlert(SmsAlertContract request)
+        public async Task TwilioNotify(MessageContract contract)
         {
             await InitTwilioClient();
             var senderNumber = await _configurationService.GetValue("twilio_sender_number");
 
             await MessageResource.CreateAsync(
-                    body: $"{request.ContactName}'s health status changed to: {request.ContactStatus}",
+                    body: contract.Message,
                     from: new Twilio.Types.PhoneNumber(senderNumber),
-                    to: new Twilio.Types.PhoneNumber(request.UserPhoneNumber)
+                    to: new Twilio.Types.PhoneNumber(contract.UserPhoneNumber)
                 );
+        }
+
+        public async Task PushNotification(MessageContract contract)
+        {
+            
         }
 
         private async Task InitTwilioClient()

@@ -21,10 +21,10 @@ namespace Notification.Api.Controllers
         }
 
         [HttpPost]
-        [Route("SmsAlert")]
-        public async Task SmsAlert(SmsAlertContract request)
+        [Route("Notification")]
+        public async Task NotificationsHandler(MessageContract request)
         {
-            await _notificationService.SmsAlert(request);
+            await _notificationService.TwilioNotify(request);
         }
     }
 }

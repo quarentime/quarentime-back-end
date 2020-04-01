@@ -46,6 +46,15 @@ namespace User.Api.Controllers
         }
 
         [HttpPost]
+        [Route("DeviceTokenRegistration")]
+        public async Task<Response> RegisterUserDeviceToken(string token)
+        {
+            await _userService.RegisterUserDeviceToken(UserId.Value, token);
+
+            return new SuccessResponse();
+        }
+
+        [HttpPost]
         [Route("Survey")]
         [SwaggerResponse(201, type: typeof(Response<SurveyResponse>))]
         public async Task<IActionResult> UpdateSurvey(SurveyIntake value)

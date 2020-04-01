@@ -5,7 +5,6 @@ namespace Notification.Api.Services
 {
     public interface INotificationService
     {
-        Task PushNotification();
-        Task SmsAlert(SmsAlertContract request);
+        Task TwilioNotify(MessageContract request);
     }
 }

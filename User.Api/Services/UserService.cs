@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using User.Api.Model;
 using System.Linq;
 using User.Api.Exceptions;
+using System;
 
 namespace User.Api.Services
 {
@@ -114,6 +115,11 @@ namespace User.Api.Services
             return (await _personalInformationRepository
                             .GetByFieldAsync(nameof(PersonalInformation.PhoneNumber), phoneNumber))
                             .FirstOrDefault();
+        }
+
+        public Task RegisterUserDeviceToken(string userId, string token)
+        {
+            throw new NotImplementedException();
         }
     }
 }
