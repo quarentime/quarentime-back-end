@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Quarentime.Common\Quarentime.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+  </ItemGroup>
+
 </Project>

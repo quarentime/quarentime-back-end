@@ -1,4 +1,5 @@
 using Moq;
+using Quarentime.Common.Repository;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using User.Api.Model;
@@ -9,7 +10,7 @@ namespace User.Api.Tests
 {
     public class SurveyIntakeEvaluationTest
     {
-        private static Mock<ICollectionRepository<User.Api.Model.User>> _userRepository;
+        private static Mock<ICollectionRepository<Model.User>> _userRepository;
         private static Mock<ICollectionRepository<SurveyIntake>> _surveyRepository;
         private static Mock<ICollectionRepository<PersonalInformation>> _personalInfoRepository;
         private static Mock<IPhoneVerificationService> _phoneVerificationService;

@@ -1,10 +1,11 @@
-﻿using Notification.Api.Models;
+﻿using Quarentime.Common.Contracts;
 using System.Threading.Tasks;
 
 namespace Notification.Api.Services
 {
     public interface INotificationService
     {
-        Task TwilioNotify(MessageContract request);
+        Task SmsNotification(MessageContract contract);
+        Task PushNotification(MessageContract contract);
     }
 }

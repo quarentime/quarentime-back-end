@@ -1,6 +1,6 @@
 using System;
 using Google.Cloud.Firestore;
-using User.Api.Attributes;
+using Quarentime.Common.Attributes;
 
 namespace User.Api.Model
 {

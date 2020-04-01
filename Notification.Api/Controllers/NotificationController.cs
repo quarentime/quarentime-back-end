@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Notification.Api.Models;
 using Notification.Api.Services;
+using Quarentime.Common.Contracts;
 using System.Threading.Tasks;
+using Quarentime.Common.Helpers;
+using Newtonsoft.Json;
 
 namespace Notification.Api.Controllers
 {
@@ -11,20 +12,26 @@ namespace Notification.Api.Controllers
     public class NotificationController : ControllerBase
     {
         private readonly INotificationService _notificationService;
-        private readonly ILogger<NotificationController> _logger;
 
-        public NotificationController(INotificationService notificationService,
-            ILogger<NotificationController> logger)
+        public NotificationController(INotificationService notificationService)
         {
             _notificationService = notificationService;
-            _logger = logger;
         }
 
         [HttpPost]
-        [Route("Notification")]
-        public async Task NotificationsHandler(MessageContract request)
+        [Route("Push")]
+        public async Task PushNotification()
         {
-            await _notificationService.TwilioNotify(request);
+            var message = JsonConvert.DeserializeObject<MessageContract>(Request.Body.StreamToString());
+            await _notificationService.PushNotification(message);
+        }
+
+        [HttpPost]
+        [Route("Sms")]
+        public async Task SmsNotification()
+        {
+            var message = JsonConvert.DeserializeObject<MessageContract>(Request.Body.StreamToString());
+            await _notificationService.SmsNotification(message);
         }
     }
 }
