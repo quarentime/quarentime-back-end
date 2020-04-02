@@ -1,4 +1,6 @@
-﻿using Google.Protobuf;
+﻿using Google.Api.Gax.Grpc;
+using Google.Protobuf;
+using Grpc.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -7,6 +9,7 @@ using Newtonsoft.Json.Serialization;
 using Quarentime.Common.Contracts;
 using Quarentime.Common.Models;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using gct = Google.Cloud.Tasks.V2;
 
@@ -43,7 +46,7 @@ namespace Quarentime.Common.Services
 
             try
             {
-                client.CreateTask(new gct.CreateTaskRequest
+                var task = new gct.CreateTaskRequest
                 {
                     Parent = queue.ToString(),
                     Task = new gct.Task
@@ -52,10 +55,12 @@ namespace Quarentime.Common.Services
                         {
                             HttpMethod = gct.HttpMethod.Post,
                             Body = ByteString.CopyFromUtf8(JsonConvert.SerializeObject(contract, jsonSettings)),
-                            Url = $"{serviceUrl}{tuple.resourceUrl}"
+                            Url = $"{serviceUrl}{tuple.resourceUrl}",
                         }
                     }
-                });
+                };
+                //Callsettings not registering the Content-Type header
+                var createdTask = await client.CreateTaskAsync(task, CallSettings.FromHeader("Content-Type", "application/json"));
             }catch(Exception e)
             {
                 _logger.LogError(e, e.Message, queue.ToString());
