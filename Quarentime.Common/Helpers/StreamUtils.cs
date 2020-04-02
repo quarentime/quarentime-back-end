@@ -1,16 +1,19 @@
-﻿using System.IO;
-using System.Text;
+﻿using Newtonsoft.Json;
+using System.IO;
 
 namespace Quarentime.Common.Helpers
 {
     public static class StreamUtils
     {
-        public static string StreamToString(this Stream stream)
+        public static T DeserializeStream<T>(this Stream stream) where T : class
         {
-            stream.Position = 0;
-            using var reader = new StreamReader(stream, Encoding.UTF8);
+            var serializer = new JsonSerializer();
 
-            return reader.ReadToEnd();
+            using (var sr = new StreamReader(stream))
+            using (var jsonTextReader = new JsonTextReader(sr))
+            {
+                return serializer.Deserialize<T>(jsonTextReader);
+            }
         }
     }
 }

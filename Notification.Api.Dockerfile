@@ -1,12 +1,12 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-env
 WORKDIR /workspace
 
-COPY ./Notification.Api ./workspace/Notification.Api
-COPY ./Quarentime.Common ./workspace/Quarentime.Common
+COPY ./Notification.Api ./Notification.Api
+COPY ./Quarentime.Common ./Quarentime.Common
 
-RUN dotnet restore ./workspace/Notification.Api
-RUN dotnet restore ./workspace/Quarentime.Common
-RUN dotnet publish ./workspace/Notification.Api -c Release -o publish
+RUN dotnet restore ./Notification.Api
+RUN dotnet restore ./Quarentime.Common
+RUN dotnet publish ./Notification.Api -c Release -o publish
 
 # Run
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
