@@ -1,5 +1,6 @@
 ﻿using FirebaseAdmin.Messaging;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Quarentime.Common.Contracts;
 using Quarentime.Common.Services;
 using System;
@@ -27,6 +28,7 @@ namespace Notification.Api.Services
         public async Task SmsNotification(MessageContract contract)
         {
             await InitTwilioClient();
+            _logger.LogInformation(JsonConvert.SerializeObject(contract));
             var senderNumber = await _configurationService.GetValue("twilio_sender_number");
             try
             {

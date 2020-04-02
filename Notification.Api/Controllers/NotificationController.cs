@@ -3,7 +3,7 @@ using Notification.Api.Services;
 using Quarentime.Common.Contracts;
 using System.Threading.Tasks;
 using Quarentime.Common.Helpers;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Notification.Api.Controllers
 {
@@ -22,7 +22,7 @@ namespace Notification.Api.Controllers
         [Route("Push")]
         public async Task PushNotification()
         {
-            var message = JsonConvert.DeserializeObject<MessageContract>(Request.Body.StreamToString());
+            var message = Request.Body.DeserializeStream<MessageContract>();
             await _notificationService.PushNotification(message);
         }
 
@@ -30,7 +30,7 @@ namespace Notification.Api.Controllers
         [Route("Sms")]
         public async Task SmsNotification()
         {
-            var message = JsonConvert.DeserializeObject<MessageContract>(Request.Body.StreamToString());
+            var message = Request.Body.DeserializeStream<MessageContract>();
             await _notificationService.SmsNotification(message);
         }
     }
