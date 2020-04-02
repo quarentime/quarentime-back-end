@@ -63,3 +63,6 @@ Temporary Items
 .vs
 *.csproj.user
 /User.Api/Properties/launchSettings.Local.json
+
+# Testing
+newman

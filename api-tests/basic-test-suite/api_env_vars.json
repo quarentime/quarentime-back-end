@@ -1,0 +1,7 @@
+{
+  "name": "globals",
+  "values": [{
+    "key": "host",
+    "value": "https://quarentime-user-api-rcgccs4vga-ew.a.run.app"
+  }]
+}
