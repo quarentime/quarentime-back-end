@@ -12,26 +12,28 @@ namespace Notification.Api.Controllers
     public class NotificationController : ControllerBase
     {
         private readonly INotificationService _notificationService;
+        private readonly ILogger<NotificationController> _logger;
 
-        public NotificationController(INotificationService notificationService)
+        public NotificationController(ILogger<NotificationController> logger, 
+            INotificationService notificationService)
         {
+            _logger = logger;
             _notificationService = notificationService;
         }
 
         [HttpPost]
         [Route("Push")]
-        public async Task PushNotification()
+        public async Task PushNotification([FromBody]MessageContract contract)
         {
-            var message = Request.Body.DeserializeStream<MessageContract>();
-            await _notificationService.PushNotification(message);
+            _logger.LogInformation(contract.Message);
+            await _notificationService.PushNotification(contract);
         }
 
         [HttpPost]
         [Route("Sms")]
-        public async Task SmsNotification()
+        public async Task SmsNotification([FromBody]MessageContract contract)
         {
-            var message = Request.Body.DeserializeStream<MessageContract>();
-            await _notificationService.SmsNotification(message);
+            await _notificationService.SmsNotification(contract);
         }
     }
 }
