@@ -6,7 +6,7 @@ namespace User.Api.Services
 {
     public interface IContactsService
     {
-        Task InsertManyAsync(string userId, IEnumerable<Contact> contacts);
+        Task InsertManyAsync(string userId, IEnumerable<BasicContactInfo> contacts);
         Task<IEnumerable<Invite>> GetPendingInvitesAsync(string userId);
         Task<IEnumerable<Contact>> GetAllContactsAsync(string userId);
         Task AcceptInviteAsync(string userId, string inviteId);

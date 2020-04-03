@@ -5,6 +5,6 @@ namespace User.Api.Contracts
 {
     public class ContactCollectionRequestContract
     {
-        public IEnumerable<Contact> Contacts { get; set; }
+        public IEnumerable<BasicContactInfo> Contacts { get; set; }
     }
 }
