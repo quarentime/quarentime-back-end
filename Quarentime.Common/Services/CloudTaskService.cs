@@ -16,10 +16,14 @@ namespace Quarentime.Common.Services
     public class CloudTaskService : ICloudTaskService
     {
         private readonly IConfiguration _configuration;
+        private readonly IConfigurationService _configurationService;
         private readonly ILogger<CloudTaskService> _logger;
 
-        public CloudTaskService(ILogger<CloudTaskService> logger, IConfiguration configuration)
+        public CloudTaskService(ILogger<CloudTaskService> logger, 
+            IConfiguration configuration,
+            IConfigurationService configurationService)
         {
+            _configurationService = configurationService;
             _logger = logger;
             _configuration = configuration;
         }
@@ -32,7 +36,7 @@ namespace Quarentime.Common.Services
             var queueName = _configuration.GetSection(tuple.queue).Value;
             var location = _configuration.GetSection(Constants.LOCATION).Value;
             var projectId = _configuration.GetSection(Constants.PROJECT_ID).Value;
-            var serviceUrl = _configuration.GetSection(Constants.NOTIFICATION_SERVICE_URL).Value;
+            var serviceUrl = await _configurationService.GetValue(Constants.NOTIFICATION_SERVICE_URL);
 
             gct.QueueName queue = new gct.QueueName(projectId, location, queueName);
 
@@ -61,8 +65,7 @@ namespace Quarentime.Common.Services
                     }
                 };
                 
-                //Callsettings not registering the Content-Type header
-                var createdTask = await client.CreateTaskAsync(task, CallSettings.FromHeader("Content-Type", "application/json"));
+                await client.CreateTaskAsync(task, CallSettings.FromHeader("Content-Type", "application/json"));
             }
             catch (Exception e)
             {

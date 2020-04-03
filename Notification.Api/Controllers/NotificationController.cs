@@ -2,7 +2,6 @@
 using Notification.Api.Services;
 using Quarentime.Common.Contracts;
 using System.Threading.Tasks;
-using Quarentime.Common.Helpers;
 using Microsoft.Extensions.Logging;
 
 namespace Notification.Api.Controllers
@@ -25,7 +24,6 @@ namespace Notification.Api.Controllers
         [Route("Push")]
         public async Task PushNotification([FromBody]MessageContract contract)
         {
-            _logger.LogInformation(contract.Message);
             await _notificationService.PushNotification(contract);
         }
 
