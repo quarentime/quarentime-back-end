@@ -17,13 +17,26 @@ $ docker image list | grep quarentime-
 $ docker run -d -p 8080:8080 <container_name>
 ```
 
-## To submit a build to GCP cloud build
+## To run all tests in the solution
 
 ```
-$ gcloud builds submit --config cloudbuild.yaml --substitutions=_IMAGE_NAME=quarentime-user-api,_PROJECT=User.Api
+dotnet test
+```
+
+## To submit a build to GCP Cloud Build
+
+```
+$ gcloud builds submit --config cloudbuild.yaml --substitutions=_IMAGE_NAME=<image-name>,_PROJECT=<Project.Name>
+```
+
+### To submit a build to GCP Cloud Build specifying a docker image tag:
+
+```
+$ gcloud builds submit --config cloudbuild.yaml --substitutions=_IMAGE_NAME=<image-name>:<tag>,_PROJECT=<Project.Name>
 ```
 
 ## To deploy a version using Cloud Run
 
 ```
+gcloud run deploy <project-name>  --image gcr.io/quarentime/<image-name> --platform managed
 ```

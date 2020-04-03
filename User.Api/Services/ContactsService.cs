@@ -23,7 +23,7 @@ namespace User.Api.Services
             _userService = userService;
         }
 
-        public async Task InsertManyAsync(string userId, IEnumerable<Contact> contacts)
+        public async Task InsertManyAsync(string userId, IEnumerable<BasicContactInfo> contacts)
         {
             var currentUser = await _userService.GetPersonalInformationAsync(userId);
 
@@ -73,7 +73,8 @@ namespace User.Api.Services
             {
                 Name = i.Name,
                 PhoneNumber = i.PhoneNumber,
-                Pending = i.Pending
+                Pending = i.Pending,
+                DateAdded = i.DateAdded
             }));
 
             return contacts;

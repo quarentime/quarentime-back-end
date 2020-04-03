@@ -1,0 +1,1973 @@
+{
+	"info": {
+		"_postman_id": "a779a08c-4e6a-47e5-a49b-a15cb8d6a49c",
+		"name": "Quarentime-API-Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "/User/PersonalInformation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test\",\n\t\"surname\": \"New User\",\n\t\"phone_number\": \"+5491133108173\",\n\t\"age\": 34\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Validate Response\", function() {",
+									"    var jsonData = pm.response.json();",
+									"    var jsonDataResult = jsonData.result;",
+									"    pm.expect(jsonDataResult.email).to.eql(\"test_new_user@quarentime.org\");",
+									"    pm.expect(jsonDataResult.name).to.eql(\"Test\");",
+									"    pm.expect(jsonDataResult.surname).to.eql(\"New User\");",
+									"    pm.expect(jsonDataResult.age).to.eql(34);",
+									"    pm.expect(jsonDataResult.phone_number).to.eql(\"+5491133108173\");",
+									"    pm.expect(jsonDataResult.display_name).to.eql(\"Test New User\");",
+									"    pm.expect(jsonDataResult.verified).to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation Verified",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test New User\",\n\t\"phone_number\": \"+5491133108174\",\n\t\"age\": 34,\n\t\"verified\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation Verified",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Validate Response\", function() {",
+									"    var jsonData = pm.response.json();",
+									"    var jsonDataResult = jsonData.result;",
+									"    pm.expect(jsonDataResult.email).to.eql(\"test_new_user@quarentime.org\");",
+									"    pm.expect(jsonDataResult.name).to.eql(\"Test New User\");",
+									"    pm.expect(jsonDataResult.age).to.eql(34);",
+									"    pm.expect(jsonDataResult.phone_number).to.eql(\"+5491133108174\");",
+									"    pm.expect(jsonDataResult.display_name).to.eql(\"Test New User\");",
+									"    pm.expect(jsonDataResult.verified).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/VerifyPhone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a2fda554-39f6-40e5-ae02-7010457b945c",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/VerifyPhone",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"VerifyPhone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"positive\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#F76161\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": true,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(true);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([]);",
+									"});",
+									"",
+									"// {",
+									"//     \"result\": {",
+									"//         \"has_recent_travel_last14_days\": false,",
+									"//         \"has_recent_travel_before_symptoms\": false,",
+									"//         \"has_close_contact\": false,",
+									"//         \"has_symptoms\": false,",
+									"//         \"has_recovered\": false,",
+									"//         \"is_tested_positive\": false,",
+									"//         \"symptoms\": []",
+									"//     },",
+									"//     \"request_id\": \"be58ebf2-c4f4-407a-b6cb-0f400747ced4\"",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive Recovered",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"recovered\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#C18EBD\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": true,\n        \"is_tested_positive\": true,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive Recovered",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(true);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(true);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([]);",
+									"});",
+									"",
+									"// {",
+									"//     \"result\": {",
+									"//         \"has_recent_travel_last14_days\": false,",
+									"//         \"has_recent_travel_before_symptoms\": false,",
+									"//         \"has_close_contact\": false,",
+									"//         \"has_symptoms\": false,",
+									"//         \"has_recovered\": false,",
+									"//         \"is_tested_positive\": false,",
+									"//         \"symptoms\": []",
+									"//     },",
+									"//     \"request_id\": \"be58ebf2-c4f4-407a-b6cb-0f400747ced4\"",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive with symptoms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"positive\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#F76161\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": true,\n        \"symptoms\": [\"fever\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive with symptoms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(true);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([\"fever\"]);",
+									"});",
+									"",
+									"// {",
+									"//     \"result\": {",
+									"//         \"has_recent_travel_last14_days\": false,",
+									"//         \"has_recent_travel_before_symptoms\": false,",
+									"//         \"has_close_contact\": false,",
+									"//         \"has_symptoms\": false,",
+									"//         \"has_recovered\": false,",
+									"//         \"is_tested_positive\": false,",
+									"//         \"symptoms\": []",
+									"//     },",
+									"//     \"request_id\": \"be58ebf2-c4f4-407a-b6cb-0f400747ced4\"",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive no symptoms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"positive\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#F76161\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": true\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive no symptoms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(true);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result).to.not.have.property('symptoms');",
+									"});",
+									"",
+									"// {",
+									"//     \"result\": {",
+									"//         \"has_recent_travel_last14_days\": false,",
+									"//         \"has_recent_travel_before_symptoms\": false,",
+									"//         \"has_close_contact\": false,",
+									"//         \"has_symptoms\": false,",
+									"//         \"has_recovered\": false,",
+									"//         \"is_tested_positive\": false,",
+									"//         \"symptoms\": []",
+									"//     },",
+									"//     \"request_id\": \"be58ebf2-c4f4-407a-b6cb-0f400747ced4\"",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive all symptoms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"positive\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#F76161\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": true,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"difficult_breathing\",\n        \"throat_pain_runny_nose\",\n        \"fatigue\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive all symptoms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(true);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([\"fever\",",
+									"        \"dry_cough\",",
+									"        \"difficult_breathing\",",
+									"        \"throat_pain_runny_nose\",",
+									"        \"fatigue\"]);",
+									"});",
+									"",
+									"// {",
+									"//     \"result\": {",
+									"//         \"has_recent_travel_last14_days\": false,",
+									"//         \"has_recent_travel_before_symptoms\": false,",
+									"//         \"has_close_contact\": false,",
+									"//         \"has_symptoms\": false,",
+									"//         \"has_recovered\": false,",
+									"//         \"is_tested_positive\": false,",
+									"//         \"symptoms\": []",
+									"//     },",
+									"//     \"request_id\": \"be58ebf2-c4f4-407a-b6cb-0f400747ced4\"",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative all symptoms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#61C1F7\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"difficult_breathing\",\n        \"throat_pain_runny_nose\",\n        \"fatigue\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative all symptoms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([\"fever\",",
+									"        \"dry_cough\",",
+									"        \"difficult_breathing\",",
+									"        \"throat_pain_runny_nose\",",
+									"        \"fatigue\"]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Risky",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"high_probability_suspected\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#F7BA61\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": true,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"Fever\",\n        \"DryCough\",\n        \"Fatigue\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Risky",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(true);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([\"fever\",",
+									"        \"dry_cough\",",
+									"        \"fatigue\"]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Flu Like",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#61C1F7\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"fatigue\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Flu Like",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([\"fever\",",
+									"        \"dry_cough\",",
+									"        \"fatigue\"]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative High Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"high_probability_suspected\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#F7BA61\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": true,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"throat_pain_runny_nose\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative High Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(true);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([\"fever\",",
+									"        \"dry_cough\",",
+									"        \"throat_pain_runny_nose\"]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Low Probability Travelled 14 days and Dry Cough",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#F7BA61\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": true,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"dry_cough\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Low Probability Travelled 14 days and Dry Cough",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(true);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([\"dry_cough\"]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Social Distancing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"healty_social_distancing\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#61C1F7\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": true,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative Social Distancing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(true);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([]);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#61C1F7\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e09ccf40-fee1-4daa-82c1-165fc03a83bb",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.is_tested_positive).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_last14_days).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recent_travel_before_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_close_contact).to.eql(false);",
+									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
+									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
+									"    pm.expect(jsonData.result.symptoms).to.eql([]);",
+									"});",
+									"",
+									"// {",
+									"//     \"result\": {",
+									"//         \"has_recent_travel_last14_days\": false,",
+									"//         \"has_recent_travel_before_symptoms\": false,",
+									"//         \"has_close_contact\": false,",
+									"//         \"has_symptoms\": false,",
+									"//         \"has_recovered\": false,",
+									"//         \"is_tested_positive\": false,",
+									"//         \"symptoms\": []",
+									"//     },",
+									"//     \"request_id\": \"be58ebf2-c4f4-407a-b6cb-0f400747ced4\"",
+									"// }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive all symptoms CamelCase",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.eql(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": true,\n        \"symptoms\": [\"Fever\",\n        \"DryCough\",\n        \"DifficultBreathing\",\n        \"ThroatPainRunnyNose\",\n        \"Fatigue\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "0c116a8e-addd-4c1b-8551-525e1ce88e9d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6666f0bf-15b2-47db-917e-c25474193284",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "807fc451-d1c8-4dde-b2a4-77d054eaeefd",
+			"key": "host",
+			"value": "https://quarentime-user-api-rcgccs4vga-ew.a.run.app/",
+			"type": "string"
+		},
+		{
+			"id": "47551c18-69ad-48a4-a22d-186f3a36853d",
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
