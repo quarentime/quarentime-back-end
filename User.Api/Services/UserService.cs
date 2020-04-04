@@ -1,18 +1,18 @@
 using System.Threading.Tasks;
 using User.Api.Model;
 using System.Linq;
-using User.Api.Exceptions;
+using Quarentime.Common.Repository;
 
 namespace User.Api.Services
 {
     public class UserService : IUserService
     {
-        private readonly ICollectionRepository<User.Api.Model.User> _userRepository;
+        private readonly ICollectionRepository<Model.User> _userRepository;
         private readonly ICollectionRepository<PersonalInformation> _personalInformationRepository;
         private readonly ICollectionRepository<SurveyIntake> _surveyRepository;
         private readonly IPhoneVerificationService _phoneVerificationService;
 
-        public UserService(ICollectionRepository<User.Api.Model.User> userRepository,
+        public UserService(ICollectionRepository<Model.User> userRepository,
                            ICollectionRepository<PersonalInformation> personalInformationRepository,
                            ICollectionRepository<SurveyIntake> surveyRepository,
                            IPhoneVerificationService phoneVerificationService)

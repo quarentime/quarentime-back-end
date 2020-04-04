@@ -1,6 +1,6 @@
 using Google.Cloud.Firestore;
 
-namespace User.Api.Configuration
+namespace Quarentime.Common.Services
 {
     [FirestoreData]
     public class ConfigurationSetting

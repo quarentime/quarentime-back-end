@@ -10,7 +10,8 @@ using System;
 using User.Api.Filters;
 using User.Api.Services;
 using Microsoft.OpenApi.Models;
-using User.Api.Configuration;
+using Quarentime.Common.Repository;
+using Quarentime.Common.Services;
 using System.Threading.Tasks;
 using User.Api.Logging;
 
@@ -93,6 +94,8 @@ namespace User.Api
                 .AddScoped(typeof(ICollectionRepository<>), typeof(CollectionRepository<>))
                 .AddScoped(typeof(ISubCollectionRepository<>), typeof(SubCollectionRepository<>))
                 .AddScoped<IUserService, UserService>()
+                .AddTransient<ICloudTaskService, CloudTaskService>()
+                .AddScoped<IDevicesService, DevicesService>()
                 .AddScoped<IPhoneVerificationService, PhoneVerificationService>()
                 .AddScoped<IConfigurationService, ConfigurationService>()
                 .AddScoped<IContactsService, ContactsService>();

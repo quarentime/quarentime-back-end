@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.Configuration;
 
-namespace User.Api.Services
+namespace Quarentime.Common.Repository
 {
     public class CollectionRepository<T> : ICollectionRepository<T> where T : class
     {
@@ -12,7 +12,7 @@ namespace User.Api.Services
 
         public CollectionRepository(IConfiguration configuration)
         {
-            Firestore = FirestoreDb.Create(configuration.GetValue<string>("GCPProjectName"));
+            Firestore = FirestoreDb.Create(configuration.GetSection("GCPProjectName").Value);
             Collection = Firestore.Collection(typeof(T).Name);
         }
 

@@ -1,7 +1,7 @@
+using Quarentime.Common.Repository;
 using System.Threading.Tasks;
-using User.Api.Services;
 
-namespace User.Api.Configuration
+namespace Quarentime.Common.Services
 {
     public class ConfigurationService : IConfigurationService
     {

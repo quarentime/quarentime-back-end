@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Quarentime.Common.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using User.Api.Contracts;
 using User.Api.Exceptions;
@@ -14,9 +15,11 @@ namespace User.Api.Controllers
     {
         private readonly IUserService _userService;
         private readonly IContactsService _contactsService;
+        private readonly IDevicesService _devicesService;
 
-        public UserController(IUserService userService, IContactsService contactsService)
+        public UserController(IUserService userService, IContactsService contactsService, IDevicesService devicesService)
         {
+            _devicesService = devicesService;
             _userService = userService;
             _contactsService = contactsService;
         }
@@ -143,6 +146,15 @@ namespace User.Api.Controllers
         {
             var result = await _contactsService.GetPendingInvitesAsync(UserId.Value);
             return Ok(new Response<IEnumerable<Invite>>(result));
+        }
+
+        [HttpPost]
+        [Route("Devices/Register")]
+        [SwaggerResponse(201, type: typeof(SuccessResponse))]
+        public async Task<IActionResult> RegisterDevice(string token)
+        {
+            await _devicesService.RegisterDevice(UserId.Value, token);
+            return Created(new SuccessResponse());
         }
     }
 }

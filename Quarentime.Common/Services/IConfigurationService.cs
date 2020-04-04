@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace User.Api.Configuration
+namespace Quarentime.Common.Services
 {
     public interface IConfigurationService
     {

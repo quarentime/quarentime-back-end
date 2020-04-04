@@ -1,6 +1,6 @@
 using System;
 
-namespace User.Api.Attributes
+namespace Quarentime.Common.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class EntityPathAttribute : Attribute

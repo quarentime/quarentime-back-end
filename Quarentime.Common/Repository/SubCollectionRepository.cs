@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
-using User.Api.Attributes;
+using Quarentime.Common.Attributes;
 
-namespace User.Api.Services
+namespace Quarentime.Common.Repository
 {
     public class SubCollectionRepository<T> : ISubCollectionRepository<T> where T : class
     {
@@ -14,7 +14,7 @@ namespace User.Api.Services
         
         public SubCollectionRepository(IConfiguration configuration)
         {
-            Firestore = FirestoreDb.Create(configuration.GetValue<string>("GCPProjectName"));
+            Firestore = FirestoreDb.Create(configuration.GetSection("GCPProjectName").Value);
 
             var attributes = typeof(T).GetCustomAttributes(false);
             var attr = (EntityPathAttribute)attributes.First(a => a is EntityPathAttribute);

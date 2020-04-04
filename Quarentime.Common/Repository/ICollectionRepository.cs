@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace User.Api.Services
+namespace Quarentime.Common.Repository
 {
     public interface ICollectionRepository<T> where T : class
     {

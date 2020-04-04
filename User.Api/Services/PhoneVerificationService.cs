@@ -1,23 +1,24 @@
+using Quarentime.Common.Repository;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
-using User.Api.Configuration;
 using User.Api.Model;
+using Quarentime.Common.Services;
+using Quarentime.Common.Contracts;
+using Quarentime.Common.Models;
 
 namespace User.Api.Services
 {
     public class PhoneVerificationService : IPhoneVerificationService
     {
         private readonly ICollectionRepository<PhoneVerificationCode> _phoneVerificationRepository;
-        private readonly IConfigurationService _configurationService;
+        private readonly ICloudTaskService _cloudTaskService;
 
         public PhoneVerificationService(ICollectionRepository<PhoneVerificationCode> phoneVerificationCode,
-                                        IConfigurationService configurationService)
+                                        ICloudTaskService cloudTaskService)
         {
+            _cloudTaskService = cloudTaskService;
             _phoneVerificationRepository = phoneVerificationCode;
-            _configurationService = configurationService;
         }
 
         public async Task RequestVerificationAsync(string userId, PersonalInformation personalInformation)
@@ -28,24 +29,15 @@ namespace User.Api.Services
             };
             await _phoneVerificationRepository.InsertAsync(userId, phoneVerificationCode);
 
-            await SendSmsAsync(personalInformation.Name,
-                                personalInformation.PhoneNumber,
-                                phoneVerificationCode.Code);
-        }
+            var message = new MessageContract
+            {
+                Message = $"Hello {personalInformation.DisplayName}, this is your Quarentime verification code: {phoneVerificationCode.Code}",
+                Title = $"Phone verification code",
+                UserId = userId,
+                UserPhoneNumber = personalInformation.PhoneNumber
+            };
 
-        private async Task SendSmsAsync(string displayName, string phoneNumber, string code)
-        {
-            var accountSid = await _configurationService.GetValue("twilio_sid");
-            var authToken = await _configurationService.GetValue("twilio_auth_token");
-            var senderNumber = await _configurationService.GetValue("twilio_sender_number");
-
-            TwilioClient.Init(accountSid, authToken);
-
-            var message = await MessageResource.CreateAsync(
-                body: $"Hello {displayName}, this is your Quarentime verification code: {code}",
-                from: new Twilio.Types.PhoneNumber(senderNumber),
-                to: new Twilio.Types.PhoneNumber(phoneNumber)
-            );
+            await _cloudTaskService.SendMessage(message, NotificationType.SmsNotifications);
         }
 
         public async Task<bool> ValidateAsync(string userId, string verificationCode)
