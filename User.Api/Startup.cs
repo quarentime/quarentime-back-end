@@ -11,6 +11,8 @@ using User.Api.Filters;
 using User.Api.Services;
 using Microsoft.OpenApi.Models;
 using User.Api.Configuration;
+using System.Threading.Tasks;
+using User.Api.Logging;
 
 namespace User.Api
 {
@@ -50,6 +52,22 @@ namespace User.Api
                     {
                         options.Audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
                         options.Authority = Environment.GetEnvironmentVariable("JWT_AUTHORITY");
+                        options.Events = new JwtBearerEvents
+                        {
+                            OnMessageReceived = context =>
+                            {
+                                // This is the forwarded value from cloud endpoints
+                                string forwardedAuthorization = context.Request.Headers["X-Forwarded-Authorization"];
+                                if (!string.IsNullOrWhiteSpace(forwardedAuthorization))
+                                {
+                                    if (forwardedAuthorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        context.Token = forwardedAuthorization.Substring("Bearer ".Length).Trim();
+                                    }
+                                }
+                                return Task.CompletedTask;
+                            }
+                        };
                     });
 
             services.AddSwaggerGen(c =>
@@ -60,7 +78,7 @@ namespace User.Api
                     })
                     .AddSwaggerGenNewtonsoftSupport();
 
-            services.AddCors(options => 
+            services.AddCors(options =>
             {
                 options.AddPolicy("AnyOrigin", builder =>
                 {
@@ -83,6 +101,8 @@ namespace User.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<RequestLoggingMiddleware>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -110,6 +130,8 @@ namespace User.Api
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Users microservice");
                 c.SupportedSubmitMethods();
             });
+
+
         }
     }
 }
