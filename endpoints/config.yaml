@@ -1,0 +1,509 @@
+swagger: '2.0'
+definitions:
+  AcceptInviteRequestContract:
+    properties:
+      invite_id:
+        type: string
+        x-nullable: true
+    type: object
+  BooleanResponse:
+    properties:
+      error_code:
+        type: string
+        x-nullable: true
+      request_id:
+        format: uuid
+        readOnly: true
+        type: string
+      result:
+        type: boolean
+    type: object
+  Contact:
+    properties:
+      date_added:
+        format: date-time
+        type: string
+      name:
+        type: string
+        x-nullable: true
+      pending:
+        type: boolean
+      phone_number:
+        type: string
+        x-nullable: true
+      status:
+        $ref: '#/definitions/RiskGroup'
+      user_id:
+        type: string
+        x-nullable: true
+    type: object
+  ContactCollectionRequestContract:
+    properties:
+      contacts:
+        items:
+          $ref: '#/definitions/Contact'
+        type: array
+        x-nullable: true
+    type: object
+  ContactIEnumerableResponse:
+    properties:
+      error_code:
+        type: string
+        x-nullable: true
+      request_id:
+        format: uuid
+        readOnly: true
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/Contact'
+        type: array
+        x-nullable: true
+    type: object
+  ContactTrace:
+    properties:
+      color_hex:
+        type: string
+        x-nullable: true
+      contacts:
+        items:
+          $ref: '#/definitions/ContactTrace'
+        type: array
+        x-nullable: true
+      final_status:
+        $ref: '#/definitions/RiskGroup'
+      initials:
+        readOnly: true
+        type: string
+        x-nullable: true
+      name:
+        type: string
+        x-nullable: true
+      pending:
+        type: boolean
+    type: object
+  ContactTraceResponse:
+    properties:
+      error_code:
+        type: string
+        x-nullable: true
+      request_id:
+        format: uuid
+        readOnly: true
+        type: string
+      result:
+        $ref: '#/definitions/ContactTrace'
+    type: object
+  Invite:
+    properties:
+      date_added:
+        format: date-time
+        type: string
+      from_user_id:
+        type: string
+        x-nullable: true
+      from_user_name:
+        type: string
+        x-nullable: true
+      from_user_phone_number:
+        type: string
+        x-nullable: true
+      invite_id:
+        type: string
+        x-nullable: true
+      name:
+        type: string
+        x-nullable: true
+      pending:
+        type: boolean
+      phone_number:
+        type: string
+        x-nullable: true
+    type: object
+  InviteIEnumerableResponse:
+    properties:
+      error_code:
+        type: string
+        x-nullable: true
+      request_id:
+        format: uuid
+        readOnly: true
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/Invite'
+        type: array
+        x-nullable: true
+    type: object
+  PersonalInformation:
+    properties:
+      age:
+        format: int32
+        type: integer
+      display_name:
+        readOnly: true
+        type: string
+        x-nullable: true
+      email:
+        type: string
+        x-nullable: true
+      name:
+        type: string
+        x-nullable: true
+      phone_number:
+        type: string
+        x-nullable: true
+      surname:
+        type: string
+        x-nullable: true
+      user_id:
+        type: string
+        x-nullable: true
+      verified:
+        type: boolean
+    type: object
+  PersonalInformationResponse:
+    properties:
+      error_code:
+        type: string
+        x-nullable: true
+      request_id:
+        format: uuid
+        readOnly: true
+        type: string
+      result:
+        $ref: '#/definitions/PersonalInformation'
+    type: object
+  PhoneVerificationContract:
+    properties:
+      code:
+        type: string
+        x-nullable: true
+    type: object
+  RejectInviteRequestContract:
+    properties:
+      invite_id:
+        type: string
+        x-nullable: true
+    type: object
+  RiskGroup:
+    enum:
+      - healthy
+      - healty_social_distancing
+      - low_probability_suspected
+      - high_probability_suspected
+      - flu_like
+      - positive
+      - recovered
+    type: string
+  SuccessResponse:
+    properties:
+      error_code:
+        type: string
+        x-nullable: true
+      request_id:
+        format: uuid
+        readOnly: true
+        type: string
+      result:
+        type: string
+        x-nullable: true
+    type: object
+  SurveyIntake:
+    properties:
+      has_close_contact:
+        type: boolean
+      has_recent_travel_before_symptoms:
+        type: boolean
+      has_recent_travel_last14_days:
+        type: boolean
+      has_recovered:
+        type: boolean
+      has_symptoms:
+        type: boolean
+      is_tested_positive:
+        type: boolean
+      symptoms:
+        items:
+          $ref: '#/definitions/Symptom'
+        type: array
+        x-nullable: true
+    type: object
+  SurveyIntakeResponse:
+    properties:
+      error_code:
+        type: string
+        x-nullable: true
+      request_id:
+        format: uuid
+        readOnly: true
+        type: string
+      result:
+        $ref: '#/definitions/SurveyIntake'
+    type: object
+  SurveyResponse:
+    properties:
+      color_hex:
+        type: string
+        x-nullable: true
+      status:
+        $ref: '#/definitions/RiskGroup'
+    type: object
+  SurveyResponseResponse:
+    properties:
+      error_code:
+        type: string
+        x-nullable: true
+      request_id:
+        format: uuid
+        readOnly: true
+        type: string
+      result:
+        $ref: '#/definitions/SurveyResponse'
+    type: object
+  Symptom:
+    enum:
+      - fever
+      - dry_cough
+      - difficult_breathing
+      - throat_pain_runny_nose
+      - fatigue
+    type: string
+
+
+info:
+  title: Quarentime API
+  version: 1.0.0
+
+host: quarentime-gateway-rcgccs4vga-ew.a.run.app
+
+x-google-backend:
+  address: https://quarentime-user-api-rcgccs4vga-ew.a.run.app
+  path_translation: APPEND_PATH_TO_ADDRESS
+
+paths:
+  /User/ConfirmVerificationCode:
+    post:
+      operationId: ConfirmVerificationCode
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/PhoneVerificationContract'
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/BooleanResponse'
+      tags:
+        - User
+  /User/Contacts:
+    get:
+      operationId: GetContacts
+      parameters: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ContactIEnumerableResponse'
+      tags:
+        - User
+    post:
+      operationId: PostContacts
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/ContactCollectionRequestContract'
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+      tags:
+        - User
+  /User/Contacts/Trace:
+    get:
+      operationId: GetContactTrace
+      parameters: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ContactTraceResponse'
+      tags:
+        - User
+  /User/FriendRequests/Accept:
+    post:
+      operationId: AcceptFriendRequests
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/AcceptInviteRequestContract'
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+      tags:
+        - User
+  /User/FriendRequests/Pending:
+    get:
+      operationId: PendingFriendRequests
+      parameters: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/InviteIEnumerableResponse'
+      tags:
+        - User
+  /User/FriendRequests/Reject:
+    delete:
+      operationId: RejectFriendRequests
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/RejectInviteRequestContract'
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+      tags:
+        - User
+  /User/PersonalInformation:
+    get:
+      operationId: GetPersonalInformation
+      parameters: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/PersonalInformationResponse'
+      tags:
+        - User
+    post:
+      operationId: PostPersonalInformation
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/PersonalInformation'
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+      tags:
+        - User
+  /User/Survey:
+    get:
+      operationId: GetSurvey
+      parameters: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/SurveyIntakeResponse'
+      tags:
+        - User
+    post:
+      operationId: PostSurvey
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/SurveyIntake'
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SurveyResponseResponse'
+      tags:
+        - User
+  /User/VerifyPhone:
+    post:
+      operationId: VerifyPhone
+      parameters: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '201':
+          description: Success
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+      tags:
+        - User
