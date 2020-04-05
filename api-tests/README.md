@@ -5,16 +5,17 @@
 ### Prerequisites
 * Install Newman as API tests are executed using Newman by [Postman](https://github.com/postmanlabs/newman)
 * Install Postman
+* Get the API_KEY from Firebase
 
 To run the tests, you must do the following
 
 1. `cd api-tests/`
 1. In the Terminal, add the env var `QUARENTIME_FIREBASE_TOKEN``
-    1. `export QUARENTIME_FIREBASE_TOKEN=%YOUR_TOKEN`
+    1. `export QUARENTIME_FIREBASE_API_KEY=${API_KEY}`
 1. Install Newman locally
     1. `npm install -g newman`
     1. `npm install -g newman-reporter-htmlextra`
-1. Run `newman run basic-test-suite/Quarentime-API-Tests.postman_collection.json  -e basic-test-suite/api_env_vars.json -r htmlextra,cli --env-var "token=$QUARENTIME_FIREBASE_TOKEN"`
+1. Run ` newman run basic-test-suite/Quarentime-API-Tests.postman_collection.json  -e basic-test-suite/api_env_vars.json -r htmlextra,csv,cli --env-var "API_TOKEN=$QUARENTIME_FIREBASE_API_KEY`
 
 ### Extending the tests
 1. Open Postman locally
