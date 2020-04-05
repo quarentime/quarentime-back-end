@@ -14,5 +14,6 @@ namespace User.Api.Model
         [FirestoreProperty] public string PhoneNumber { get; set; }
         [FirestoreProperty] public bool Pending { get; set; }
         [FirestoreProperty] public DateTime DateAdded { get; set; }
+        [FirestoreProperty] public bool IsDirectContact { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Quarentime.Common.Contracts;
 using Quarentime.Common.Services;
 using Swashbuckle.AspNetCore.Annotations;
 using User.Api.Contracts;
@@ -108,16 +109,16 @@ namespace User.Api.Controllers
         [SwaggerResponse(200, type: typeof(Response<IEnumerable<Contact>>))]
         public async Task<IActionResult> GetContacts()
         {
-            var result = await _contactsService.GetAllContactsAsync(UserId.Value);
+            var result = await _contactsService.GetAllContactsAsync(UserId.Value, null);
             return Ok(new Response<IEnumerable<Contact>>(result));
         }
 
         [HttpGet]
         [Route("Contacts/Trace")]
         [SwaggerResponse(200, type: typeof(Response<ContactTrace>))]
-        public async Task<IActionResult> GetContactTrace()
+        public async Task<IActionResult> GetContactTrace([FromQuery]GetContactTraceContract request)
         {
-            var result = await _contactsService.GetContactTrace(UserId.Value);
+            var result = await _contactsService.GetContactTrace(UserId.Value, request);
             return Ok(new Response<ContactTrace>(result));
         }
 

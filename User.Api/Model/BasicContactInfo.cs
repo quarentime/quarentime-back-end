@@ -6,5 +6,6 @@ namespace User.Api.Model
     {
         [JsonProperty, JsonRequired] public string Name { get; set; }
         [JsonProperty, JsonRequired] public string PhoneNumber { get; set; }
+        [JsonProperty, JsonRequired] public bool IsDirectContact { get; set; }
     }
 }
