@@ -9,6 +9,74 @@
 			"name": "Users",
 			"item": [
 				{
+					"name": "auth token register User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7f9f050-25be-43a0-8873-f9b63f4f146b",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"token\", jsonData.idToken);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "48d35c30-f526-4546-8b79-a4e9e9e36aa9",
+								"exec": [
+									"var date = new Date();",
+									"var timestamp = date.getTime();",
+									"var userName = \"test_quarentime_user\".concat(timestamp)",
+									"var userEmail = userName.concat(\"@quarentime-test.com\")",
+									"var userPhone = \"+1\".concat(timestamp)",
+									"postman.setGlobalVariable(\"api_test_user_1_email\", userEmail);",
+									"postman.setGlobalVariable(\"api_test_user_1_name\", userName);",
+									"postman.setGlobalVariable(\"api_test_user_1_phone_number\", userPhone);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{api_test_user_1_email}}\",\"password\":\"quarentime_api_test_1234!\",\"returnSecureToken\":true}"
+						},
+						"url": {
+							"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{API_KEY}}",
+							"protocol": "https",
+							"host": [
+								"identitytoolkit",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1",
+								"accounts:signUp"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{API_KEY}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/User/PersonalInformation",
 					"event": [
 						{
@@ -50,7 +118,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test\",\n\t\"surname\": \"New User\",\n\t\"phone_number\": \"+5491133108173\",\n\t\"age\": 34\n}",
+							"raw": "{\n\t\"email\": \"{{api_test_user_1_email}}\",\n\t\"name\": \"{{api_test_user_1_name}}\",\n\t\"surname\": \"New User\",\n\t\"phone_number\": \"{{api_test_user_1_phone_number}}\",\n\t\"age\": 34\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -84,14 +152,25 @@
 									"pm.test(\"Validate Response\", function() {",
 									"    var jsonData = pm.response.json();",
 									"    var jsonDataResult = jsonData.result;",
-									"    pm.expect(jsonDataResult.email).to.eql(\"test_new_user@quarentime.org\");",
-									"    pm.expect(jsonDataResult.name).to.eql(\"Test\");",
+									"    pm.expect(jsonDataResult.email).to.eql(pm.globals.get(\"api_test_user_1_email\"));",
+									"    pm.expect(jsonDataResult.name).to.eql(pm.globals.get(\"api_test_user_1_name\"));",
 									"    pm.expect(jsonDataResult.surname).to.eql(\"New User\");",
 									"    pm.expect(jsonDataResult.age).to.eql(34);",
-									"    pm.expect(jsonDataResult.phone_number).to.eql(\"+5491133108173\");",
-									"    pm.expect(jsonDataResult.display_name).to.eql(\"Test New User\");",
+									"    pm.expect(jsonDataResult.phone_number).to.eql(pm.globals.get(\"api_test_user_1_phone_number\"));",
+									"    pm.expect(jsonDataResult.display_name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User\");",
 									"    pm.expect(jsonDataResult.verified).to.eql(false);",
+									"    ",
 									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cd4d492b-9fd4-438c-8304-1895c15e5282",
+								"exec": [
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -124,7 +203,7 @@
 					"response": []
 				},
 				{
-					"name": "/User/PersonalInformation Verified",
+					"name": "/User/PersonalInformation Basic Information",
 					"event": [
 						{
 							"listen": "test",
@@ -165,7 +244,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test\",\n\t\"surname\": \"New User\",\n\t\"phone_number\": \"+5491133108174\",\n\t\"age\": 34,\n\t\"verified\": true\n}",
+							"raw": "{\n\t\"name\": \"{{api_test_user_1_name}}\",\n\t\"phone_number\": \"{{api_test_user_1_phone_number}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -186,7 +265,7 @@
 					"response": []
 				},
 				{
-					"name": "/User/PersonalInformation Verified",
+					"name": "/User/PersonalInformation Basic Information",
 					"event": [
 						{
 							"listen": "test",
@@ -199,14 +278,23 @@
 									"pm.test(\"Validate Response\", function() {",
 									"    var jsonData = pm.response.json();",
 									"    var jsonDataResult = jsonData.result;",
-									"    pm.expect(jsonDataResult.email).to.eql(\"test_new_user@quarentime.org\");",
-									"    pm.expect(jsonDataResult.name).to.eql(\"Test\");",
-									"    pm.expect(jsonDataResult.surname).to.eql(\"New User\");",
-									"    pm.expect(jsonDataResult.age).to.eql(34);",
-									"    pm.expect(jsonDataResult.phone_number).to.eql(\"+5491133108174\");",
-									"    pm.expect(jsonDataResult.display_name).to.eql(\"Test New User\");",
-									"    pm.expect(jsonDataResult.verified).to.eql(true);",
+									"    pm.expect(jsonDataResult).to.not.have.property(\"email\");",
+									"    pm.expect(jsonDataResult.name).to.eql(pm.globals.get(\"api_test_user_1_name\"));",
+									"    pm.expect(jsonDataResult.phone_number).to.eql(pm.globals.get(\"api_test_user_1_phone_number\"));",
+									"    pm.expect(jsonDataResult.verified).to.eql(false);",
+									"    pm.expect(jsonDataResult.display_name).to.eql(pm.globals.get(\"api_test_user_1_name\"));",
+									"    pm.expect(jsonDataResult).to.not.have.property('age');",
 									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cd4d492b-9fd4-438c-8304-1895c15e5282",
+								"exec": [
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -225,6 +313,64 @@
 						},
 						"method": "GET",
 						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation Missing Key Fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{host}}/User/PersonalInformation",
 							"host": [
@@ -248,6 +394,11 @@
 								"exec": [
 									"pm.test(\"Validate Status Code\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
 									"});"
 								],
 								"type": "text/javascript"
@@ -291,67 +442,6 @@
 							"path": [
 								"User",
 								"VerifyPhone"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/User/Contacts",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
-								"exec": [
-									"pm.test(\"Validate Status Code\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/User/Contacts",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"User",
-								"Contacts"
 							]
 						}
 					},
@@ -444,19 +534,7 @@
 									"    pm.expect(jsonData.result.has_recovered).to.eql(false);",
 									"    pm.expect(jsonData.result.symptoms).to.eql([]);",
 									"});",
-									"",
-									"// {",
-									"//     \"result\": {",
-									"//         \"has_recent_travel_last14_days\": false,",
-									"//         \"has_recent_travel_before_symptoms\": false,",
-									"//         \"has_close_contact\": false,",
-									"//         \"has_symptoms\": false,",
-									"//         \"has_recovered\": false,",
-									"//         \"is_tested_positive\": false,",
-									"//         \"symptoms\": []",
-									"//     },",
-									"//     \"request_id\": \"be58ebf2-c4f4-407a-b6cb-0f400747ced4\"",
-									"// }"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -574,20 +652,7 @@
 									"    pm.expect(jsonData.result.has_symptoms).to.eql(false);",
 									"    pm.expect(jsonData.result.has_recovered).to.eql(true);",
 									"    pm.expect(jsonData.result.symptoms).to.eql([]);",
-									"});",
-									"",
-									"// {",
-									"//     \"result\": {",
-									"//         \"has_recent_travel_last14_days\": false,",
-									"//         \"has_recent_travel_before_symptoms\": false,",
-									"//         \"has_close_contact\": false,",
-									"//         \"has_symptoms\": false,",
-									"//         \"has_recovered\": false,",
-									"//         \"is_tested_positive\": false,",
-									"//         \"symptoms\": []",
-									"//     },",
-									"//     \"request_id\": \"be58ebf2-c4f4-407a-b6cb-0f400747ced4\"",
-									"// }"
+									"});"
 								],
 								"type": "text/javascript"
 							}
@@ -1140,7 +1205,7 @@
 					"response": []
 				},
 				{
-					"name": "/User/Survey Negative Risky",
+					"name": "/User/Survey Negative High Probability Travel",
 					"event": [
 						{
 							"listen": "test",
@@ -1183,7 +1248,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": true,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"Fever\",\n        \"DryCough\",\n        \"Fatigue\"]\n    }",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": true,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"fatigue\"]\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1205,7 +1270,7 @@
 					"response": []
 				},
 				{
-					"name": "/User/Survey Negative Risky",
+					"name": "/User/Survey Negative High Probability Travel",
 					"event": [
 						{
 							"listen": "test",
@@ -1932,6 +1997,1610 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Invitations",
+			"item": [
+				{
+					"name": "auth token register User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7f9f050-25be-43a0-8873-f9b63f4f146b",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_1_token\", jsonData.idToken);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "48d35c30-f526-4546-8b79-a4e9e9e36aa9",
+								"exec": [
+									"var date = new Date();",
+									"var timestamp = date.getTime();",
+									"var userName = \"test_quarentime_user_1_\".concat(timestamp)",
+									"var userEmail = userName.concat(\"@quarentime-test.com\")",
+									"var userPhone = \"+1\".concat(timestamp)",
+									"postman.setGlobalVariable(\"api_test_user_1_email\", userEmail);",
+									"postman.setGlobalVariable(\"api_test_user_1_name\", userName);",
+									"postman.setGlobalVariable(\"api_test_user_1_phone_number\", userPhone);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{api_test_user_1_email}}\",\"password\":\"quarentime_api_test_1234!\",\"returnSecureToken\":true}"
+						},
+						"url": {
+							"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{API_KEY}}",
+							"protocol": "https",
+							"host": [
+								"identitytoolkit",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1",
+								"accounts:signUp"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{API_KEY}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{api_test_user_1_email}}\",\n\t\"name\": \"{{api_test_user_1_name}}\",\n\t\"surname\": \"New User 1\",\n\t\"phone_number\": \"{{api_test_user_1_phone_number}}\",\n\t\"age\": 34\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_1_user_id\", jsonData.result.user_id);",
+									"",
+									"pm.test(\"Validate Status Code\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cd4d492b-9fd4-438c-8304-1895c15e5282",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth token register User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7f9f050-25be-43a0-8873-f9b63f4f146b",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_2_token\", jsonData.idToken);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "48d35c30-f526-4546-8b79-a4e9e9e36aa9",
+								"exec": [
+									"var date = new Date();",
+									"var timestamp = date.getTime();",
+									"var userName = \"test_quarentime_user_2_\".concat(timestamp)",
+									"var userEmail = userName.concat(\"@quarentime-test.com\")",
+									"var userPhone = \"+1\".concat(timestamp)",
+									"postman.setGlobalVariable(\"api_test_user_2_email\", userEmail);",
+									"postman.setGlobalVariable(\"api_test_user_2_name\", userName);",
+									"postman.setGlobalVariable(\"api_test_user_2_phone_number\", userPhone);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{api_test_user_2_email}}\",\"password\":\"quarentime_api_test_1234!\",\"returnSecureToken\":true}"
+						},
+						"url": {
+							"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{API_KEY}}",
+							"protocol": "https",
+							"host": [
+								"identitytoolkit",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1",
+								"accounts:signUp"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{API_KEY}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{api_test_user_2_email}}\",\n\t\"name\": \"{{api_test_user_2_name}}\",\n\t\"surname\": \"New User 2\",\n\t\"phone_number\": \"{{api_test_user_2_phone_number}}\",\n\t\"age\": 34\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_2_user_id\", jsonData.result.user_id);",
+									"",
+									"pm.test(\"Validate Status Code\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cd4d492b-9fd4-438c-8304-1895c15e5282",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0966bf3e-3f56-4247-aaff-dec5f5f5490e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"contacts\": [\n\t\t{\n\t\t\t\"name\": \"{{api_test_user_1_name}}\",\n\t\t\t\"phone_number\": \"{{api_test_user_1_phone_number}}\"\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserNotPresent = true",
+									"",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_2_user_id\")) {",
+									"            isUserNotPresent = false;",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserNotPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserPresent = false",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].name == pm.globals.get(\"api_test_user_1_name\")) {",
+									"            isUserPresent = true;",
+									"            pm.expect(jsonData.result[i].phone_number).to.eql(pm.globals.get(\"api_test_user_1_phone_number\"));",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/FriendRequests/Pending User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e0b468c-1007-4a47-94f6-62e17c805446",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserPresent = false",
+									"    console.log( pm.globals.get(\"api_test_user_2_name\"));",
+									"",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_2_user_id\")) {",
+									"            isUserPresent = true;",
+									"            pm.expect(jsonData.result[i].from_user_name).to.eql(pm.globals.get(\"api_test_user_2_name\"));",
+									"            pm.expect(jsonData.result[i].from_user_phone_number).to.eql(pm.globals.get(\"api_test_user_2_phone_number\"));",
+									"            pm.expect(jsonData.result[i].pending).to.eql(true);",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/FriendRequests/Pending",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"FriendRequests",
+								"Pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/FriendRequests/Pending User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e0b468c-1007-4a47-94f6-62e17c805446",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/FriendRequests/Pending",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"FriendRequests",
+								"Pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/FriendRequests/Accept User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93ed0a88-4e19-4ea4-94ae-f5d9df9c129a",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"invite_id\": \"{{api_test_user_2_user_id}}{{api_test_user_1_phone_number}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/FriendRequests/Accept",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"FriendRequests",
+								"Accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 1 After Acceptance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserPresent = false",
+									"   for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].phone_number == pm.globals.get(\"api_test_user_2_phone_number\")) {",
+									"            isUserPresent = true;",
+									"            pm.expect(jsonData.result[i].name).to.eql(pm.globals.get(\"api_test_user_2_name\"));",
+									"            pm.expect(jsonData.result[i].pending).to.eql(false);",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/FriendRequests/Pending User 1 After Acceptance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e0b468c-1007-4a47-94f6-62e17c805446",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserNotPresent = true",
+									"",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_2_user_id\")) {",
+									"            isUserNotPresent = false;",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserNotPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/FriendRequests/Pending",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"FriendRequests",
+								"Pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth token register User 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7f9f050-25be-43a0-8873-f9b63f4f146b",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_3_token\", jsonData.idToken);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "48d35c30-f526-4546-8b79-a4e9e9e36aa9",
+								"exec": [
+									"var date = new Date();",
+									"var timestamp = date.getTime();",
+									"var userName = \"test_quarentime_user_3_\".concat(timestamp)",
+									"var userEmail = userName.concat(\"@quarentime-test.com\")",
+									"var userPhone = \"+1\".concat(timestamp)",
+									"postman.setGlobalVariable(\"api_test_user_3_email\", userEmail);",
+									"postman.setGlobalVariable(\"api_test_user_3_name\", userName);",
+									"postman.setGlobalVariable(\"api_test_user_3_phone_number\", userPhone);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{api_test_user_3_email}}\",\"password\":\"quarentime_api_test_1234!\",\"returnSecureToken\":true}"
+						},
+						"url": {
+							"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{API_KEY}}",
+							"protocol": "https",
+							"host": [
+								"identitytoolkit",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1",
+								"accounts:signUp"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{API_KEY}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_3_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{api_test_user_3_email}}\",\n\t\"name\": \"{{api_test_user_3_name}}\",\n\t\"surname\": \"New User 3\",\n\t\"phone_number\": \"{{api_test_user_3_phone_number}}\",\n\t\"age\": 34\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_3_user_id\", jsonData.result.user_id);",
+									"",
+									"pm.test(\"Validate Status Code\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cd4d492b-9fd4-438c-8304-1895c15e5282",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_3_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0966bf3e-3f56-4247-aaff-dec5f5f5490e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_3_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"contacts\": [\n\t\t{\n\t\t\t\"user_id\": \"{{api_test_user_1_user_id}}\",\n\t\t\t\"name\": \"{{api_test_user_1_name}}\",\n\t\t\t\"surname\": \"New User 1\",\n\t\t\t\"phone_number\": \"{{api_test_user_1_phone_number}}\"\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserNotPresent = true;",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_3_user_id\")) {",
+									"            isUserNotPresent = false;",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserNotPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/FriendRequests/Pending User 1 Before Rejection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e0b468c-1007-4a47-94f6-62e17c805446",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserPresent = false",
+									"",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_3_user_id\")) {",
+									"            isUserPresent = true;",
+									"            pm.expect(jsonData.result[i].from_user_name).to.eql(pm.globals.get(\"api_test_user_3_name\"));",
+									"            pm.expect(jsonData.result[i].from_user_phone_number).to.eql(pm.globals.get(\"api_test_user_3_phone_number\"));",
+									"            pm.expect(jsonData.result[i].pending).to.eql(true);",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/FriendRequests/Pending",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"FriendRequests",
+								"Pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/FriendRequests/Reject User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93ed0a88-4e19-4ea4-94ae-f5d9df9c129a",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201,202]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"invite_id\": \"{{api_test_user_3_user_id}}{{api_test_user_1_phone_number}}\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/FriendRequests/Reject",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"FriendRequests",
+								"Reject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/FriendRequests/Pending User 1 After Rejection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e0b468c-1007-4a47-94f6-62e17c805446",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserNotPresent = true",
+									"",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_3_user_id\")) {",
+									"            isUserNotPresent = false;",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserNotPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/FriendRequests/Pending",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"FriendRequests",
+								"Pending"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 1 After Rejection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserNotPresent = true",
+									"",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_3_user_id\")) {",
+									"            isUserNotPresent = false;",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserNotPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 3 After Rejection",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserNotPresent = true",
+									"",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_1_user_id\")) {",
+									"            isUserNotPresent = false;",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserNotPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_3_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"event": [
@@ -1958,15 +3627,15 @@
 	],
 	"variable": [
 		{
-			"id": "807fc451-d1c8-4dde-b2a4-77d054eaeefd",
+			"id": "7552a9d1-104d-4b77-83ea-edef56b37c49",
 			"key": "host",
 			"value": "https://quarentime-user-api-rcgccs4vga-ew.a.run.app/",
 			"type": "string"
 		},
 		{
-			"id": "47551c18-69ad-48a4-a22d-186f3a36853d",
-			"key": "token",
-			"value": "",
+			"id": "5aa3d172-a5b0-4c9b-8898-74ec22562e0c",
+			"key": "API_KEY",
+			"value": "AIzaSyBA3VcHnEWCy-mpShMLTdq1bEMkWsf2oIM",
 			"type": "string"
 		}
 	],
