@@ -5,12 +5,13 @@ namespace User.Api.Model
     [FirestoreData(ConverterType = typeof(FirestoreEnumNameConverter<RiskGroup>))]
     public enum RiskGroup
     {
-        Healthy,
-        HealtySocialDistancing,
-        LowProbabilitySuspected,
-        HighProbabilitySuspected,
-        FluLike,
-        Positive,
-        Recovered
+        Healthy = 0,
+        HealtySocialDistancing = 1,
+        LowProbabilitySuspected = 2,
+        HighProbabilitySuspected = 3,
+        FluLike = 4,
+        Positive = 5,
+        Recovered = 6,
+        Pending = 7
     }
 }
