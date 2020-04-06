@@ -12,7 +12,8 @@ namespace User.Api.Model
             { RiskGroup.HighProbabilitySuspected, "#F7BA61" },
             { RiskGroup.Healthy, "#61C1F7" },
             { RiskGroup.FluLike, "#61C1F7" },
-            { RiskGroup.HealtySocialDistancing, "#61C1F7" }
+            { RiskGroup.HealtySocialDistancing, "#61C1F7" },
+            { RiskGroup.Pending, "#D1D1D1" }
         };
     }
 }

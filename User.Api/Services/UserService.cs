@@ -48,7 +48,7 @@ namespace User.Api.Services
             var user = await _userRepository.GetByIdAsync(userId);
             if (user == null)
             {
-                return RiskGroup.Healthy;
+                return RiskGroup.Pending;
             }
 
             return user.FinalStatus;
@@ -61,8 +61,8 @@ namespace User.Api.Services
             {
                 user = new Model.User
                 {
-                    Status = RiskGroup.Healthy,
-                    FinalStatus = RiskGroup.Healthy
+                    Status = RiskGroup.Pending,
+                    FinalStatus = RiskGroup.Pending
                 };
             }
 
