@@ -104,7 +104,7 @@ namespace User.Api.Services
                 PhoneNumber = i.PhoneNumber,
                 Pending = i.Pending,
                 DateAdded = i.DateAdded,
-                Status = RiskGroup.Pending
+                Status = RiskGroup.Pending,
                 IsDirectContact = i.IsDirectContact
             }));
 
