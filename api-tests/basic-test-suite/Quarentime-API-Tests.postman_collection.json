@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a779a08c-4e6a-47e5-a49b-a15cb8d6a49c",
+		"_postman_id": "5b40df95-9326-4736-bfb4-39b223b44d82",
 		"name": "Quarentime-API-Tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -165,7 +165,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test New User\",\n\t\"phone_number\": \"+5491133108174\",\n\t\"age\": 34,\n\t\"verified\": true\n}",
+							"raw": "{\n\t\"email\": \"test_new_user@quarentime.org\",\n\t\"name\": \"Test\",\n\t\"surname\": \"New User\",\n\t\"phone_number\": \"+5491133108174\",\n\t\"age\": 34,\n\t\"verified\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -200,7 +200,8 @@
 									"    var jsonData = pm.response.json();",
 									"    var jsonDataResult = jsonData.result;",
 									"    pm.expect(jsonDataResult.email).to.eql(\"test_new_user@quarentime.org\");",
-									"    pm.expect(jsonDataResult.name).to.eql(\"Test New User\");",
+									"    pm.expect(jsonDataResult.name).to.eql(\"Test\");",
+									"    pm.expect(jsonDataResult.surname).to.eql(\"New User\");",
 									"    pm.expect(jsonDataResult.age).to.eql(34);",
 									"    pm.expect(jsonDataResult.phone_number).to.eql(\"+5491133108174\");",
 									"    pm.expect(jsonDataResult.display_name).to.eql(\"Test New User\");",

@@ -103,8 +103,9 @@ namespace User.Api.Services
                 Name = i.Name,
                 PhoneNumber = i.PhoneNumber,
                 Pending = i.Pending,
-                IsDirectContact = i.IsDirectContact,
-                DateAdded = i.DateAdded
+                DateAdded = i.DateAdded,
+                Status = RiskGroup.Pending
+                IsDirectContact = i.IsDirectContact
             }));
 
             return contacts;
