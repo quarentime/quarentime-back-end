@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Google.Cloud.Firestore;
 using Microsoft.Extensions.Configuration;
@@ -30,9 +31,17 @@ namespace Quarentime.Common.Repository
             return true;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(IDictionary<string, string> filterParams = null)
         {
-            var snapshot = await Collection.GetSnapshotAsync();
+            Query query = Collection;
+            if(filterParams != null)
+            {
+                foreach((string key, string value) in filterParams)
+                {
+                   query = query.WhereEqualTo(key, value);
+                }
+            }
+            var snapshot = await query.GetSnapshotAsync();
             var result = new List<T>();
             foreach (var doc in snapshot.Documents)
             {

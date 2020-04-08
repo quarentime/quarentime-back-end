@@ -9,6 +9,8 @@ using Quarentime.Common.Services;
 using Quarentime.Common.Contracts;
 using Quarentime.Common.Models;
 using Microsoft.Extensions.Logging;
+using User.Api.Contracts;
+using Quarentime.Common.Helpers;
 
 namespace User.Api.Services
 {
@@ -66,7 +68,8 @@ namespace User.Api.Services
                         PhoneNumber = contact.PhoneNumber,
                         Name = contact.Name,
                         DateAdded = DateTime.UtcNow,
-                        Pending = true
+                        Pending = true,
+                        IsDirectContact = contact.IsDirectContact
                     });
 
                 }catch(Exception e)
@@ -87,10 +90,10 @@ namespace User.Api.Services
             return await _inviteRepository.GetByFieldAsync(nameof(Invite.PhoneNumber), user.PhoneNumber);
         }
 
-        public async Task<IEnumerable<Contact>> GetAllContactsAsync(string userId)
+        public async Task<IEnumerable<Contact>> GetAllContactsAsync(string userId, BaseFilterContract request)
         {
             // My contacts
-            var contacts = (await _contactRepository.GetAllAsync(rootId: userId)).ToList();
+            var contacts = (await _contactRepository.GetAllAsync(rootId: userId, request?.ToDictionary())).ToList();
 
             // Invites that I sent
             var invites = await _inviteRepository.GetByFieldAsync(nameof(Invite.FromUserId), userId);
@@ -101,7 +104,8 @@ namespace User.Api.Services
                 PhoneNumber = i.PhoneNumber,
                 Pending = i.Pending,
                 DateAdded = i.DateAdded,
-                Status = RiskGroup.Pending
+                Status = RiskGroup.Pending,
+                IsDirectContact = i.IsDirectContact
             }));
 
             return contacts;
@@ -122,6 +126,7 @@ namespace User.Api.Services
                 PhoneNumber = invite.FromUserPhoneNumber,
                 UserId = invite.FromUserId,
                 DateAdded = DateTime.UtcNow,
+                IsDirectContact = invite.IsDirectContact,
                 Status = await _userService.GetRiskGroupAsync(invite.FromUserId)
             });
 
@@ -132,6 +137,7 @@ namespace User.Api.Services
                 PhoneNumber = invite.PhoneNumber,
                 UserId = userId,
                 DateAdded = DateTime.UtcNow,
+                IsDirectContact = invite.IsDirectContact,
                 Status = await _userService.GetRiskGroupAsync(userId)
             });
 
@@ -144,18 +150,21 @@ namespace User.Api.Services
             await _inviteRepository.DeleteAsync(inviteId);
         }
 
-        public async Task<ContactTrace> GetContactTrace(string userId)
+        public async Task<ContactTrace> GetContactTrace(string userId, GetContactTraceContract request)
         {
             var trace = await _userService.GetUserTraceData(userId);
+            if (request != null && !request.DirectOnly)
+                request = null;
 
-            var contacts = await GetAllContactsAsync(userId);
+            var contacts = await GetAllContactsAsync(userId, request);
 
             trace.Contacts = contacts.Select(c => new ContactTrace
             {
                 Name = c.Name,
                 FinalStatus = c.Status,
                 ColorHex = RiskGroupToHexMapper.HexMapper[c.Status],
-                Pending = c.Pending
+                Pending = c.Pending,
+                IsDirectContact = c.IsDirectContact
             });
 
             return trace;

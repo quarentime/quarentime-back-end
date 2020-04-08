@@ -13,6 +13,7 @@ namespace User.Api.Model
         [FirestoreProperty] public string UserId { get; set; }
         [FirestoreProperty] public DateTime DateAdded { get; set; }
         [FirestoreProperty] public RiskGroup Status { get; set; }
+        [FirestoreProperty] public bool IsDirectContact { get; set; }
         public bool Pending { get; set; }
 
     }

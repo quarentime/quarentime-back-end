@@ -40,9 +40,17 @@ namespace Quarentime.Common.Repository
             return true;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(string rootId)
+        public async Task<IEnumerable<T>> GetAllAsync(string rootId, IDictionary<string, string> filterParams = null)
         {
-            var snapshot = await Collection(rootId).GetSnapshotAsync();
+            Query query = Collection(rootId);
+            if (filterParams != null)
+            {
+                foreach ((string key, string value) in filterParams)
+                {
+                    query = query.WhereEqualTo(key, value);
+                }
+            }
+            var snapshot = await query.GetSnapshotAsync();
             var result = new List<T>();
 
             foreach (var doc in snapshot.Documents)
