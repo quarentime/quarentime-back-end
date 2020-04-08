@@ -66,3 +66,9 @@ Temporary Items
 
 # Testing
 newman
+
+# Terraform 
+**/.terraform
+
+# GCP 
+account.json
