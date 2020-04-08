@@ -152,7 +152,7 @@ namespace User.Api.Services
         public async Task<ContactTrace> GetContactTrace(string userId, GetContactTraceContract request)
         {
             var trace = await _userService.GetUserTraceData(userId);
-            if (!request.DirectOnly)
+            if (request != null && !request.DirectOnly)
                 request = null;
 
             var contacts = await GetAllContactsAsync(userId, request);
