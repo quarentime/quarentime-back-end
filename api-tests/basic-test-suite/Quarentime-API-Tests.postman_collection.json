@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "5b40df95-9326-4736-bfb4-39b223b44d82",
+		"_postman_id": "a779a08c-4e6a-47e5-a49b-a15cb8d6a49c",
 		"name": "Quarentime-API-Tests",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -203,130 +203,6 @@
 					"response": []
 				},
 				{
-					"name": "/User/PersonalInformation Basic Information",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
-								"exec": [
-									"pm.test(\"Validate Status Code\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
-									"});",
-									"pm.test(\"Validate Response\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.result).to.eql(\"success\");",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\": \"{{api_test_user_1_name}}\",\n\t\"phone_number\": \"{{api_test_user_1_phone_number}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{host}}/User/PersonalInformation",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"User",
-								"PersonalInformation"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/User/PersonalInformation Basic Information",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
-								"exec": [
-									"pm.test(\"Validate Status Code\", function() {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Validate Response\", function() {",
-									"    var jsonData = pm.response.json();",
-									"    var jsonDataResult = jsonData.result;",
-									"    pm.expect(jsonDataResult).to.not.have.property(\"email\");",
-									"    pm.expect(jsonDataResult.name).to.eql(pm.globals.get(\"api_test_user_1_name\"));",
-									"    pm.expect(jsonDataResult.phone_number).to.eql(pm.globals.get(\"api_test_user_1_phone_number\"));",
-									"    pm.expect(jsonDataResult.verified).to.eql(false);",
-									"    pm.expect(jsonDataResult.display_name).to.eql(pm.globals.get(\"api_test_user_1_name\"));",
-									"    pm.expect(jsonDataResult).to.not.have.property('age');",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "cd4d492b-9fd4-438c-8304-1895c15e5282",
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{host}}/User/PersonalInformation",
-							"host": [
-								"{{host}}"
-							],
-							"path": [
-								"User",
-								"PersonalInformation"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "/User/PersonalInformation Missing Key Fields",
 					"event": [
 						{
@@ -336,6 +212,16 @@
 								"exec": [
 									"pm.test(\"Validate Status Code\", function () {",
 									"    pm.expect(pm.response.code).to.be.oneOf([400]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function() {",
+									"    var jsonData = pm.response.json();",
+									"    var jsonDataResult = jsonData.result;",
+									"    pm.expect(jsonDataResult.Age).to.eql(\"age_invalid\");",
+									"    pm.expect(jsonDataResult.Name).to.eql(\"name_required\");",
+									"    pm.expect(jsonDataResult.Surname).to.eql(\"surname_required\");",
+									"    pm.expect(jsonDataResult.PhoneNumber).to.eql(\"phone_number_required\");",
+									"    pm.expect(jsonDataResult).to.not.have.property(\"Email\");",
 									"});"
 								],
 								"type": "text/javascript"
@@ -3627,13 +3513,13 @@
 	],
 	"variable": [
 		{
-			"id": "7552a9d1-104d-4b77-83ea-edef56b37c49",
+			"id": "fa9b897f-04c0-4828-b705-3922802da91a",
 			"key": "host",
 			"value": "https://quarentime-user-api-rcgccs4vga-ew.a.run.app/",
 			"type": "string"
 		},
 		{
-			"id": "5aa3d172-a5b0-4c9b-8898-74ec22562e0c",
+			"id": "4c1f09cd-d57a-4a07-84f4-e13bb2f91ba9",
 			"key": "API_KEY",
 			"value": "AIzaSyBA3VcHnEWCy-mpShMLTdq1bEMkWsf2oIM",
 			"type": "string"
