@@ -275,10 +275,10 @@ info:
   title: Quarentime API
   version: 1.0.0
 
-host: quarentime-gateway-rcgccs4vga-ew.a.run.app
+host: quarentime-gateway-3mtz5tknuq-ew.a.run.app
 
 x-google-backend:
-  address: https://quarentime-user-api-rcgccs4vga-ew.a.run.app
+  address: https://quarentime-user-api-3mtz5tknuq-ew.a.run.app
   path_translation: APPEND_PATH_TO_ADDRESS
 
 paths:

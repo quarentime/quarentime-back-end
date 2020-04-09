@@ -40,3 +40,4 @@ $ gcloud builds submit --config cloudbuild.yaml --substitutions=_IMAGE_NAME=<ima
 ```
 gcloud run deploy <project-name>  --image gcr.io/quarentime/<image-name> --platform managed
 ```
+

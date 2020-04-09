@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "User.API",
+            "name": "User.API (dev)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -24,6 +24,31 @@
                 "JWT_AUDIENCE": "quarentime",
                 "JWT_AUTHORITY": "https://securetoken.google.com/quarentime",
                 "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/account-quarentime.json"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "User.API (prod)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/User.Api/bin/Debug/netcoreapp3.1/User.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/User.Api",
+            "stopAtEntry": false,
+            // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "JWT_AUDIENCE": "quarentime-prod",
+                "JWT_AUTHORITY": "https://securetoken.google.com/quarentime-prod",
+                "GOOGLE_APPLICATION_CREDENTIALS": "/tmp/quarentime-prod.json"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
