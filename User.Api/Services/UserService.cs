@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using User.Api.Model;
 using System.Linq;
 using Quarentime.Common.Repository;
+using User.Api.Exceptions;
 
 namespace User.Api.Services
 {
@@ -77,6 +78,10 @@ namespace User.Api.Services
         public async Task<string> GetUserName(string userId)
         {
             var user = await _personalInformationRepository.GetByIdAsync(userId);
+            if (user == null)
+            {
+                throw new NotFoundException();
+            }
             return user.DisplayName;
         }
 
