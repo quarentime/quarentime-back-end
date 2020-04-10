@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using User.Api.Extensions;
 
 namespace User.Api.Model
 {
@@ -10,8 +10,7 @@ namespace User.Api.Model
         {
             get
             {
-                Regex initials = new Regex(@"(\b[a-zA-Z])[a-zA-Z]* ?");
-                return initials.Replace(Name, "$1");
+               return Name.Initials();
             }
         }
         public RiskGroup FinalStatus { get; set; }
@@ -19,5 +18,7 @@ namespace User.Api.Model
         public string ColorHex { get; set; }
         public bool IsDirectContact { get; set; }
         public bool Pending { get; set; }
+
+        
     }
 }
