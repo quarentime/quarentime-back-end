@@ -1,3 +1,5 @@
+![.NET Core](https://github.com/quarentime/quarentime-back-end/workflows/.NET%20Core/badge.svg?branch=develop)
+
 ## To build a specific project as a docker container
 
 ```
