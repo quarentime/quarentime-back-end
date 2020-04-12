@@ -35,8 +35,10 @@ namespace User.Api.Services
             _userService = userService;
         }
 
-        public async Task InsertManyAsync(string userId, IEnumerable<BasicContactInfo> contacts)
+        public async Task<IEnumerable<AddContactResult>> InsertManyAsync(string userId, IEnumerable<BasicContactInfo> contacts)
         {
+            var result = new List<AddContactResult>();
+
             var currentUser = await _userService.GetPersonalInformationAsync(userId);
 
             foreach (var contact in contacts)
@@ -46,6 +48,19 @@ namespace User.Api.Services
 
                 if (alreadyExists)
                 {
+                    result.Add(new AddContactResult(contact.PhoneNumber, "already_exists"));
+                    continue;
+                }
+
+                // Check if we already have an invite from that user
+                var invitation = (await _inviteRepository
+                                    .GetByFieldAsync(nameof(Invite.FromUserPhoneNumber), contact.PhoneNumber))
+                                    .FirstOrDefault();
+
+                if (invitation != null)
+                {
+                    await AcceptInviteAsync(userId, invitation.InviteId);
+                    result.Add(new AddContactResult(contact.PhoneNumber, "invitation_accepted"));
                     continue;
                 }
 
@@ -63,7 +78,7 @@ namespace User.Api.Services
                     await _inviteRepository.InsertAsync($"{userId}{contact.PhoneNumber}", new Invite
                     {
                         FromUserId = userId,
-                        FromUserName = currentUser.Name,
+                        FromUserName = currentUser.DisplayName,
                         FromUserPhoneNumber = currentUser.PhoneNumber,
                         PhoneNumber = contact.PhoneNumber,
                         Name = contact.Name,
@@ -71,12 +86,15 @@ namespace User.Api.Services
                         Pending = true,
                         IsDirectContact = contact.IsDirectContact
                     });
+                    result.Add(new AddContactResult(contact.PhoneNumber, "invitation_sent"));
 
-                }catch(Exception e)
+                }
+                catch (Exception e)
                 {
                     _logger.LogError(e, $"Failed to invite contact; ExceptionMessage: {e.Message}", contact);
                 }
             }
+            return result;
         }
 
         public async Task<IEnumerable<Invite>> GetPendingInvitesAsync(string userId)
