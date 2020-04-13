@@ -97,11 +97,11 @@ namespace User.Api.Controllers
 
         [HttpPost]
         [Route("Contacts")]
-        [SwaggerResponse(201, type: typeof(SuccessResponse))]
+        [SwaggerResponse(201, type: typeof(Response<IEnumerable<AddContactResult>>))]
         public async Task<IActionResult> AddContacts(ContactCollectionRequestContract contactCollection)
         {
-            await _contactsService.InsertManyAsync(UserId.Value, contactCollection.Contacts);
-            return Created(new SuccessResponse());
+            var result = await _contactsService.InsertManyAsync(UserId.Value, contactCollection.Contacts);
+            return Created(new Response<IEnumerable<AddContactResult>>(result));
         }
 
         [HttpGet]
