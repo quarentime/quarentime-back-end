@@ -203,6 +203,75 @@
 					"response": []
 				},
 				{
+					"name": "/User/Contacts/Trace Initial",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"pending\");",
+									"    pm.expect(jsonData.result.color_hex).to.eql(\"#D1D1D1\");",
+									"    pm.expect(jsonData.result.initials).to.eql(\"TNU\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "/User/PersonalInformation Missing Key Fields",
 					"event": [
 						{
@@ -2959,7 +3028,8 @@
 									"",
 									"pm.test(\"Validate Response\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"    pm.expect(jsonData.result[0].result).to.eql(\"invitation_sent\");",
+									"    pm.expect(jsonData.result[0].phone_number).to.eql(pm.globals.get(\"api_test_user_1_phone_number\"));",
 									"});"
 								],
 								"type": "text/javascript"
@@ -3100,6 +3170,7 @@
 									"        if (jsonData.result[i].name == pm.globals.get(\"api_test_user_1_name\")) {",
 									"            isUserPresent = true;",
 									"            pm.expect(jsonData.result[i].phone_number).to.eql(pm.globals.get(\"api_test_user_1_phone_number\"));",
+									"            pm.expect(jsonData.result[i].status).to.eql(\"pending\");",
 									"        } ",
 									"    }",
 									"    pm.expect(isUserPresent).to.eql(true);",
@@ -3174,9 +3245,10 @@
 									"    for (i = 0; i < jsonData.result.length; i++) {",
 									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_2_user_id\")) {",
 									"            isUserPresent = true;",
-									"            pm.expect(jsonData.result[i].from_user_name).to.eql(pm.globals.get(\"api_test_user_2_name\"));",
+									"            pm.expect(jsonData.result[i].from_user_name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
 									"            pm.expect(jsonData.result[i].from_user_phone_number).to.eql(pm.globals.get(\"api_test_user_2_phone_number\"));",
 									"            pm.expect(jsonData.result[i].pending).to.eql(true);",
+									"            pm.expect(jsonData.result[i].is_direct_contact).to.eql(false);",
 									"        } ",
 									"    }",
 									"    pm.expect(isUserPresent).to.eql(true);",
@@ -3376,8 +3448,10 @@
 									"   for (i = 0; i < jsonData.result.length; i++) {",
 									"        if (jsonData.result[i].phone_number == pm.globals.get(\"api_test_user_2_phone_number\")) {",
 									"            isUserPresent = true;",
-									"            pm.expect(jsonData.result[i].name).to.eql(pm.globals.get(\"api_test_user_2_name\"));",
+									"            pm.expect(jsonData.result[i].name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
 									"            pm.expect(jsonData.result[i].pending).to.eql(false);",
+									"            //pm.expect(jsonData.result[i].is_direct_contact).to.eql(true); reported in /issues/31",
+									"            //pm.expect(jsonData.result[i].status).to.eql(\"accepted\"); reported in /issues/31",
 									"        } ",
 									"    }",
 									"    pm.expect(isUserPresent).to.eql(true);",
@@ -3397,6 +3471,83 @@
 								{
 									"key": "token",
 									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 2 After Acceptance",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var isUserPresent = false",
+									"    for (i = 0; i < jsonData.result.length; i++) {",
+									"        if (jsonData.result[i].name == pm.globals.get(\"api_test_user_1_name\")) {",
+									"            isUserPresent = true;",
+									"            pm.expect(jsonData.result[i].phone_number).to.eql(pm.globals.get(\"api_test_user_1_phone_number\"));",
+									"            pm.expect(jsonData.result[i].pending).to.eql(false);",
+									"            //pm.expect(jsonData.result[i].status).to.eql(\"accepted\"); reported in /issues/31",
+									"            //pm.expect(jsonData.result[i].is_direct_contact).to.eql(true); reported in /issues/31",
+									"",
+									"        } ",
+									"    }",
+									"    pm.expect(isUserPresent).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
 									"type": "string"
 								}
 							]
@@ -3700,7 +3851,8 @@
 									"",
 									"pm.test(\"Validate Response\", function () {",
 									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"    pm.expect(jsonData.result[0].result).to.eql(\"invitation_sent\");",
+									"    pm.expect(jsonData.result[0].phone_number).to.eql(pm.globals.get(\"api_test_user_1_phone_number\"));",
 									"});"
 								],
 								"type": "text/javascript"
@@ -3840,9 +3992,10 @@
 									"    for (i = 0; i < jsonData.result.length; i++) {",
 									"        if (jsonData.result[i].from_user_id == pm.globals.get(\"api_test_user_3_user_id\")) {",
 									"            isUserPresent = true;",
-									"            pm.expect(jsonData.result[i].from_user_name).to.eql(pm.globals.get(\"api_test_user_3_name\"));",
+									"            pm.expect(jsonData.result[i].from_user_name).to.eql(pm.globals.get(\"api_test_user_3_name\") + \" New User 3\");",
 									"            pm.expect(jsonData.result[i].from_user_phone_number).to.eql(pm.globals.get(\"api_test_user_3_phone_number\"));",
 									"            pm.expect(jsonData.result[i].pending).to.eql(true);",
+									"            pm.expect(jsonData.result[i].is_direct_contact).to.eql(false);",
 									"        } ",
 									"    }",
 									"    pm.expect(isUserPresent).to.eql(true);",
@@ -4179,6 +4332,3607 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Contact Trace",
+			"item": [
+				{
+					"name": "auth token register User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7f9f050-25be-43a0-8873-f9b63f4f146b",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_1_token\", jsonData.idToken);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "48d35c30-f526-4546-8b79-a4e9e9e36aa9",
+								"exec": [
+									"var date = new Date();",
+									"var timestamp = date.getTime();",
+									"var userName = \"test_quarentime_user_1_\".concat(timestamp)",
+									"var userEmail = userName.concat(\"@quarentime-test.com\")",
+									"var userPhone = \"+1\".concat(timestamp)",
+									"postman.setGlobalVariable(\"api_test_user_1_email\", userEmail);",
+									"postman.setGlobalVariable(\"api_test_user_1_name\", userName);",
+									"postman.setGlobalVariable(\"api_test_user_1_phone_number\", userPhone);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{api_test_user_1_email}}\",\"password\":\"quarentime_api_test_1234!\",\"returnSecureToken\":true}"
+						},
+						"url": {
+							"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{API_KEY}}",
+							"protocol": "https",
+							"host": [
+								"identitytoolkit",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1",
+								"accounts:signUp"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{API_KEY}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{api_test_user_1_email}}\",\n\t\"name\": \"{{api_test_user_1_name}}\",\n\t\"surname\": \"New User 1\",\n\t\"phone_number\": \"{{api_test_user_1_phone_number}}\",\n\t\"age\": 34\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_1_user_id\", jsonData.result.user_id);",
+									"",
+									"pm.test(\"Validate Status Code\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cd4d492b-9fd4-438c-8304-1895c15e5282",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 Initial",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"pending\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.initials).to.eql(\"TNU1\");",
+									"    pm.expect(jsonData.result.contacts).to.eql([]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Healthy User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"healthy\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b814a053-f55f-4cc5-ad08-a010e046ae40",
+								"exec": [
+									"setTimeout(function(){}, 1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After Survey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.initials).to.eql(\"TNU1\");",
+									"    pm.expect(jsonData.result.contacts).to.eql([]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth token register User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7f9f050-25be-43a0-8873-f9b63f4f146b",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_2_token\", jsonData.idToken);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "48d35c30-f526-4546-8b79-a4e9e9e36aa9",
+								"exec": [
+									"var date = new Date();",
+									"var timestamp = date.getTime();",
+									"var userName = \"test_quarentime_user_2_\".concat(timestamp)",
+									"var userEmail = userName.concat(\"@quarentime-test.com\")",
+									"var userPhone = \"+1\".concat(timestamp)",
+									"postman.setGlobalVariable(\"api_test_user_2_email\", userEmail);",
+									"postman.setGlobalVariable(\"api_test_user_2_name\", userName);",
+									"postman.setGlobalVariable(\"api_test_user_2_phone_number\", userPhone);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{api_test_user_2_email}}\",\"password\":\"quarentime_api_test_1234!\",\"returnSecureToken\":true}"
+						},
+						"url": {
+							"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={{API_KEY}}",
+							"protocol": "https",
+							"host": [
+								"identitytoolkit",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"v1",
+								"accounts:signUp"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "{{API_KEY}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3b22306e-7daf-4db7-96c1-805c56171717",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"{{api_test_user_2_email}}\",\n\t\"name\": \"{{api_test_user_2_name}}\",\n\t\"surname\": \"New User 2\",\n\t\"phone_number\": \"{{api_test_user_2_phone_number}}\",\n\t\"age\": 34\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/PersonalInformation User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c8ed6e1d-8d55-419e-9957-8e1565990142",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"postman.setGlobalVariable(\"api_test_user_2_user_id\", jsonData.result.user_id);",
+									"",
+									"pm.test(\"Validate Status Code\", function() {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "cd4d492b-9fd4-438c-8304-1895c15e5282",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/User/PersonalInformation",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"PersonalInformation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 Initial",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"pending\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.initials).to.eql(\"TNU2\");",
+									"    pm.expect(jsonData.result.contacts).to.eql([]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Heatlhy User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"healthy\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3ad91b91-bfd1-4018-8955-99f95e47d804",
+								"exec": [
+									"setTimeout(function(){}, 1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After Survey",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.initials).to.eql(\"TNU2\");",
+									"    pm.expect(jsonData.result.contacts).to.eql([]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0966bf3e-3f56-4247-aaff-dec5f5f5490e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result[0].result).to.eql(\"invitation_sent\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "26aa873e-68e3-4ffe-90cc-40d149a54833",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"contacts\": [\n\t\t{\n\t\t\t\"name\": \"{{api_test_user_1_name}}\",\n\t\t\t\"phone_number\": \"{{api_test_user_1_phone_number}}\"\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After Invitation Sent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    // pm.expect(jsonData.result.initials).to.eql(\"TNU1\"); //Reported in https://github.com/quarentime/quarentime-back-end/issues/44",
+									"    pm.expect(jsonData.result.contacts[0].name).to.eql(pm.globals.get(\"api_test_user_1_name\"));",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"pending\");",
+									"    pm.expect(jsonData.result.contacts[0].color_hex).to.eql(\"#D1D1D1\");",
+									"    pm.expect(jsonData.result.contacts[0].pending).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/FriendRequests/Accept User 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "93ed0a88-4e19-4ea4-94ae-f5d9df9c129a",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result).to.eql(\"success\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e0e30c4e-4185-420b-be09-2a65b82889ba",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"invite_id\": \"{{api_test_user_2_user_id}}{{api_test_user_1_phone_number}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/FriendRequests/Accept",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"FriendRequests",
+								"Accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After Accepting Invitation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.contacts[0].pending).to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After Accepting Invitation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.contacts[0].pending).to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Flu Like User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"flu_like\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c65661ce-d2dd-418c-9726-da15db1bb335",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"fatigue\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After Flu Like",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"flu_like\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After Flu Like",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"healthy\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Recovered User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"recovered\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c65661ce-d2dd-418c-9726-da15db1bb335",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": true,\n        \"is_tested_positive\": true,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After Recovered",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"recovered\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After Recovered",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"recovered\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"healthy\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative User 2 High Probability Contact",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "43c6eee1-0eae-4f33-93e4-7a69616aee90",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "8c2da70d-fffb-44fa-b5d7-4648885e1034",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"high_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": true,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"throat_pain_runny_nose\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 High Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"high_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 High Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"high_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"low_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative User 2 Low Probability Contact",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e574aa0-b9c0-489a-aa44-cf9f0855746d",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "da77887e-bf18-48b0-9ad0-5f59d3f9bc4b",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"low_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": true,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"dry_cough\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 Low Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"low_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 Low Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"low_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"positive\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "adb9ba1a-6eff-4517-8890-2def282fd38e",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": true,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After Positive",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"high_probability_suspected\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"positive\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After Positive",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"positive\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"high_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Healthy User 1 Flu-Like",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"flu_like\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b814a053-f55f-4cc5-ad08-a010e046ae40",
+								"exec": [
+									"setTimeout(function(){}, 1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"fatigue\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Heatlhy User 2 Healthy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"healthy\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3ad91b91-bfd1-4018-8955-99f95e47d804",
+								"exec": [
+									"setTimeout(function(){}, 1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After User 1 Flu Like",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.contacts[0].color_hex).to.eql(\"#61C1F7\");",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After User 2 Healthy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"healthy\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].name).to.eql(pm.globals.get(\"api_test_user_1_name\"));",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.contacts[0].color_hex).to.eql(\"#61C1F7\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Flu Like User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"flu_like\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c65661ce-d2dd-418c-9726-da15db1bb335",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"fatigue\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After User 1 Flu Like",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.contacts[0].color_hex).to.eql(\"#61C1F7\");",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After User 2 Flu Like",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.contacts[0].color_hex).to.eql(\"#61C1F7\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Recovered User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"recovered\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c65661ce-d2dd-418c-9726-da15db1bb335",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": true,\n        \"is_tested_positive\": true,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After Recovered Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"flu_like\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"recovered\");",
+									"    pm.expect(jsonData.result.contacts[0].color_hex).to.eql(\"#C18EBD\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After Recovered Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"recovered\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"flu_like\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative User 2 Low Probability Contact",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7e574aa0-b9c0-489a-aa44-cf9f0855746d",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "da77887e-bf18-48b0-9ad0-5f59d3f9bc4b",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"low_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": true,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"dry_cough\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 Low Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.contacts[0].color_hex).to.eql(\"#F7BA61\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 Low Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.contacts[0].color_hex).to.eql(\"#F7BA61\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Negative User 2 High Probability Contact",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "43c6eee1-0eae-4f33-93e4-7a69616aee90",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "8c2da70d-fffb-44fa-b5d7-4648885e1034",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"high_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": true,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": false,\n        \"symptoms\": [\"fever\",\n        \"dry_cough\",\n        \"throat_pain_runny_nose\"]\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 High Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"low_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"high_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 High Probability Contact",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"high_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"low_probability_suspected\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Survey Positive User 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3afa3bab-4b02-49b5-822f-12a82627f27e",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.status).to.eql(\"positive\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "adb9ba1a-6eff-4517-8890-2def282fd38e",
+								"exec": [
+									"setTimeout(function(){}, 5000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"has_recent_travel_last14_days\": false,\n        \"has_recent_travel_before_symptoms\": false,\n        \"has_close_contact\": false,\n        \"has_symptoms\": false,\n        \"has_recovered\": false,\n        \"is_tested_positive\": true,\n        \"symptoms\": []\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Survey",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Survey"
+							]
+						},
+						"description": "Tests Positive"
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 1 After Positive",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"high_probability_suspected\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"positive\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_1_name\") + \" New User 1\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_1_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/User/Contacts/Trace User 2 After Positive",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3d5033d3-34b1-44a1-801a-74f92caa2aec",
+								"exec": [
+									"pm.test(\"Validate Status Code\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate Response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.result.final_status).to.eql(\"positive\");",
+									"    pm.expect(jsonData.result.contacts[0].final_status).to.eql(\"high_probability_suspected\");",
+									"    pm.expect(jsonData.result.name).to.eql(pm.globals.get(\"api_test_user_2_name\") + \" New User 2\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{api_test_user_2_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/User/Contacts/Trace",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"User",
+								"Contacts",
+								"Trace"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "afbd5c7a-d64e-4815-b12c-0051e540fb9b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "09da64ff-1bda-41fb-bbce-36717b013670",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	],
 	"event": [
@@ -4205,13 +7959,13 @@
 	],
 	"variable": [
 		{
-			"id": "9df681a7-7037-464a-abe9-73ccb70a2bf1",
+			"id": "69864168-32e8-4199-bc15-9f5b00ab385e",
 			"key": "host",
 			"value": "https://quarentime-user-api-rcgccs4vga-ew.a.run.app/",
 			"type": "string"
 		},
 		{
-			"id": "7b7d629e-db7c-489b-8d71-b086d37b6f8f",
+			"id": "1a41ff8f-b586-4bf2-bb5e-849a000da85b",
 			"key": "API_KEY",
 			"value": "AIzaSyBA3VcHnEWCy-mpShMLTdq1bEMkWsf2oIM",
 			"type": "string"
