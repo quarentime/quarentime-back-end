@@ -67,7 +67,7 @@ namespace User.Api.Services
                 var message = new MessageContract()
                 {
                     //Please make a better message. We can contact PR for all of this messages
-                    Message = $"Hello, {contact.Name}! {currentUser.DisplayName} has invited you to their contract trace on Quarentime.",
+                    Message = $"Hello, {contact.Name}! {currentUser.DisplayName} has invited you to their contract trace on Quarentime. If you don't have the app yet, you can download it from https://appdistribution.firebase.dev/i/UbX9ViLM",
                     Title = $"Contact trace invitation",
                     UserId = currentUser.UserId,
                     UserPhoneNumber = contact.PhoneNumber
